@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./driver.css";
 import profil from "../../assets/profil.jpg";
 import { useNavigate } from "react-router-dom";
-import UseIcons from "../../Hooks/useIcons";
+import UseIcons from "../../Hooks/UseIcons";
 import PropTypes from "prop-types"
 
 const Driver = ({handleAddDriver}) => {

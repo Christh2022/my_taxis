@@ -1,4 +1,4 @@
-import UseIcons from "../../Hooks/useIcons";
+import UseIcons from "../../Hooks/UseIcons";
 import "./dashcontent.css";
 
 const DashContent = () => {
