@@ -3,9 +3,9 @@ import "./driver.css";
 import profil from "../../assets/profil.jpg";
 import { useNavigate } from "react-router-dom";
 import UseIcons from "../../Hooks/UseIcons";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
 
-const Driver = ({handleAddDriver}) => {
+const Driver = ({ handleAddDriver }) => {
     const { Search, Plus, Pencil, Eye, Delete } = UseIcons();
     const [resize, setResize] = useState(true);
     const navigate = useNavigate();
@@ -16,16 +16,10 @@ const Driver = ({handleAddDriver}) => {
     };
 
     useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth < 760) {
-                setResize(false);
-            } else setResize(true);
-        };
-        
-        window.addEventListener("resize", handleResize);
-
-        return () => window.removeEventListener("resize", handleResize);
-    });
+        if (window.innerWidth < 760) {
+            setResize(false);
+        } else setResize(true);
+    }, []);
 
     return (
         <div className="driver_content_start">
@@ -124,7 +118,7 @@ const Driver = ({handleAddDriver}) => {
 };
 
 Driver.propTypes = {
-    handleAddDriver : PropTypes.func
-}
+    handleAddDriver: PropTypes.func,
+};
 
 export default Driver;
