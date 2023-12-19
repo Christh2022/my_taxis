@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import UseIcons from "./useIcons";
+import UseIcons from "./UseIcons";
 
 
 
