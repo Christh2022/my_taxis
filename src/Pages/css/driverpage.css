@@ -1,0 +1,98 @@
+.Driver_list_content {
+    position: fixed;
+    left: 290px;
+    right: 0;
+    width: auto;
+    height: 100vh;
+    padding: 1rem 0.8rem;
+    padding-bottom: 0;
+    overflow-y: scroll;
+    transition: all 0.3s ease;
+}
+
+.Driver_list_content.driver_isActive {
+    left: 115px;
+    transform: all 0.3s ease;
+}
+
+.add_new_driver {
+    text-align: center;
+    padding-top: 3rem;
+    width: 100%;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.add_new_driver form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 2rem 0;
+}
+
+.add_new_driver .input_box_add {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: .6rem 0.3rem;
+    height: 30px;
+}
+
+.add_new_driver .input_box_add input {
+    height: 100%;
+    max-width: 500px;
+    width: 100%;
+    border-radius: .3rem;
+    border: none;
+    padding-left: .6rem;
+    padding-right: .6rem;
+    background: #555;
+    outline: none;
+}
+
+.add_new_driver .input_box_add input:focus{
+    border: 1px solid #fad02c;
+}
+
+.add_new_driver .input_box_add input::placeholder{
+    color: #ffffffa7;
+}
+
+.add_new_driver form button {
+    background: #fad02c;
+    padding: 0.4rem 0.6rem;
+    color: #222;
+    border: none;
+    margin-bottom: 2rem;
+    width: 15rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 0.3rem;
+    margin-top: 1rem;
+}
+
+@media (max-width: 960px) {
+    .Driver_list_content {
+        left: 115px;
+        right: 0;
+    }
+    .Driver_list_content.driver_isActive {
+        left: 290px;
+        right: -200px;
+    }
+}
+
+
+
+@media (max-width: 560px) {
+    .Driver_list_content {
+        left: 0;
+        top: 50px;
+        bottom: 50px;
+        right: 0;
+        height: auto;
+        padding-bottom: 0;
+    }
+}

@@ -1,0 +1,43 @@
+.dashboard {
+    position: fixed;
+    right: 0;
+    /* top: 50px; */
+    left: 290px;
+    width: auto;
+    height: 100vh;
+    padding: 1rem 0rem;
+    padding-bottom: 0;
+    transition: all 0.3s ease;
+}
+
+.dashboard.dash_isActive {
+    left: 110px;
+    transition: all 0.3s ease;
+}
+                                                                            
+@media (max-width: 960px) {
+    .dashboard {
+        left: 110px;
+        right: 0;
+    }
+    .dashboard.dash_isActive {
+        left: 290px;
+        right: -200px;
+    }
+}
+
+@media (max-width: 780px) {
+    .dashboard {
+        overflow-y: scroll;
+    }
+}
+@media (max-width: 560px) {
+    .dashboard {
+        left: 0;
+        top: 50px;
+        bottom: 50px;
+        right: 0;
+        height: auto;
+        padding-bottom: 0;
+    }
+}

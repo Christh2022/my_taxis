@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=Roboto:wght@100;300;400;500;700&display=swap');
+.top_dashboard{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    white-space: nowrap;
+    font-family: 'Roboto', sans-serif;
+}
+
+.info_dash{
+    display: flex;
+    gap: .5rem;
+    flex-direction: column;
+}
+
+.search_dash{
+    width: 230px;
+    height: 40px;
+}
+
+.search_dash .content_search{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #444;
+    border-radius: .3rem;
+    gap: 1rem;
+    width: 100%;
+    height: 100%;
+}
+
+.search_dash .content_search span{
+    cursor: pointer;
+    color: #fad02c;
+}
+
+
+.search_dash .content_search input{
+    width: 80%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    outline: none;
+}
+
+
+
+@media (max-width: 760px){
+    .search_dash{
+        width: 200px;
+    }
+}
+@media (max-width: 560px){
+    .search_dash{
+        width: 40px;
+        height: 40px;
+    }
+
+    .search_dash .content_search input{
+        display: none;
+    }
+}

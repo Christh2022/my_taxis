@@ -1,0 +1,184 @@
+.drivepageDetail {
+    position: fixed;
+    right: 0;
+    /* top: 50px; */
+    left: 290px;
+    width: auto;
+    height: 100vh;
+    padding: 1rem 1.2rem;
+    padding-bottom: 0;
+    overflow-y: scroll;
+    transition: all 0.3s ease;
+}
+
+.drivepageDetail.driver_page_isActive {
+    left: 110px;
+    transition: all 0.3s ease;
+}
+
+.drivepageDetail h1{
+    padding-top: 1.5rem;
+    font-size: calc(1.7rem - .2vw);
+    text-align: center;
+}
+
+.personal_info_driver {
+    padding-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+}
+
+.personol_item_info {
+    display: flex;
+    gap: 1rem;
+}
+
+.statistique_benefice span:first-child,
+.personol_item_info span:first-child {
+    font-weight: bold;
+}
+
+.statistique_benefice span:last-child,
+.personol_item_info span:last-child {
+    font-weight: 100;
+}
+
+.personol_item_info.isWorking span:last-child {
+    color: #fad02c;
+}
+.personol_item_info.isNotWorking span:last-child {
+    color: #f57a7a;
+}
+
+.info_drivepagedetail_recette {
+    padding: 1.5rem 0;
+    width: 100%;
+    overflow-x: scroll;
+}
+
+.info_drivepagedetail_recette table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.info_drivepagedetail_recette th,
+.info_drivepagedetail_recette td {
+    border: 1px solid #666;
+    padding: 8px;
+    text-align: center;
+}
+.info_drivepagedetail_recette th {
+    background-color: #f2f2f232;
+}
+.info_drivepagedetail_recette tr:nth-child(even) {
+    background-color: #222;
+}
+
+.info_drivepagedetail_recette button{
+    padding: 0.5rem 1rem;
+    border: none;
+    cursor: pointer;
+    border-radius: .3rem;
+    background: #fad02c;
+    color: #222;
+    font-weight: 700;
+}
+
+.total_driverpagedetail_recette {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-bottom: 2.5rem;
+}
+
+.statistique_benefice{
+    display: flex;
+    gap: 1rem;
+}
+
+.btn_add_day{
+    padding-top: 1.5rem;
+    padding-bottom: 2.3rem;
+}
+
+.btn_add_day form{
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+    width: 100%;    
+}
+
+.btn_add_day .input_group{
+    display: flex;
+    flex-direction: column;
+    max-width: 460px;
+    gap: .5rem;
+}
+
+.btn_add_day .input_group input{
+    height: 30px;
+    outline: none;
+    border: none;
+    border-radius: .3rem;
+    padding: 0.2rem 1rem;
+    background: #666;
+}
+
+.btn_add_day .input_group textarea{
+    min-height: 120px;
+    outline: none;
+    border: none;
+    border-radius: .3rem;
+    background: #666;
+    padding: 0.2rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn_add_day button{
+    width: 13rem;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: .3rem;
+    background: #fad02c;
+    color: #222;
+    font-weight: 700;
+    font-size: calc(1.4rem - .4vw);
+    cursor: pointer;
+}
+
+@media (max-width: 960px) {
+    .drivepageDetail {
+        left: 110px;
+        right: 0;
+    }
+    .drivepageDetail.driver_page_isActive {
+        left: 290px;
+        right: -200px;
+    }
+}
+
+@media (max-width: 780px) {
+    .drivepageDetail {
+        overflow-y: scroll;
+    }
+
+    .btn_add_day button{
+        width: 10rem;
+        padding: 0.5rem 0.4rem;
+        font-size: calc(1rem - .4vw);
+    }
+}
+@media (max-width: 560px) {
+    .drivepageDetail {
+        left: 0;
+        top: 50px;
+        bottom: 50px;
+        right: 0;
+        height: auto;
+        padding-bottom: 0;
+    }
+
+    .drivepageDetail h1{
+        font-size: calc(1.4rem - .2vw);
+    }
+}
