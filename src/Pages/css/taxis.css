@@ -1,0 +1,135 @@
+.taxis_list_content {
+    position: fixed;
+    right: 0;
+    box-sizing: border-box;
+    /* top: 50px; */
+    left: 290px;
+    width: auto;
+    height: 100vh;
+    padding: 1rem 0rem;
+    padding-bottom: 0;
+    overflow-y: scroll;
+    transition: all 0.3s ease;
+}
+
+.taxis_list_content.taxis_isActive {
+    left: 120px;
+    transition: all 0.3s ease;
+}
+
+.container_taxis_list {
+    padding: 0rem 1rem;
+    width: 100%;
+}
+
+.taxis_list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    width: 100%;
+    padding: 1rem 0;
+}
+
+.taxis_list li {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    width: calc(78% / 3);
+    background: #444;
+    padding: 16px;
+    border-radius: .3rem;
+    /* margin: 7px; */
+}
+
+.taxis_list li img {
+    width: 10rem;
+    aspect-ratio: 3/3;
+}
+
+.taxis_list li h5 {
+    font-size: calc(1.2rem - 0.2vw);
+    padding: .5rem 0;
+    position: relative;
+}
+
+.taxis_list li h5::before{
+    content: "";
+    position: absolute;
+    width: 3rem;
+    bottom: 0;
+    border: 2px solid #fad02c;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.taxis_list li > :nth-child(3) {
+    margin-top: 1rem;
+    width: 100%;
+    gap: 0.3rem;
+    padding: 0rem 1rem;
+}
+
+.taxis_list li > :nth-child(3) > * {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+
+.taxis_list li button{
+    background: #fad02c;
+    color: #222;
+    border: none;
+    outline: none;
+    padding: 0.5rem 1.3rem;
+    border-radius: .3rem;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+@media (max-width: 960px) {
+    .taxis_list_content {
+        left: 120px;
+        right: 0;
+    }
+
+    .taxis_list_content.taxis_isActive {
+        left: 290px;
+        right: -200px;
+    }
+
+    .gallery_wrapper .image {
+        width: calc(100% / 3);
+    }
+}
+
+@media (max-width: 760px) {
+    .taxis_list li {
+        width: calc(78% / 2);
+        padding: 14px;
+        /* margin: 7px; */
+    }
+}
+@media (max-width: 560px) {
+    .taxis_list_content {
+        left: 0;
+        top: 50px;
+        bottom: 50px;
+        right: 0;
+        height: auto;
+        padding-bottom: 0;
+    }
+
+    .taxis_list li {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        width: calc(79% / 2);
+        background: #444;
+        padding: 13px;
+        /* margin: 7px; */
+    }
+}

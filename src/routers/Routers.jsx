@@ -6,6 +6,7 @@ import DriverPage from "../Pages/DriverPage";
 import DriverPageDetail from "../Pages/DriverPageDetail";
 import DriverPageEdit from "../Pages/DriverPageEdit";
 import Setting from "../Pages/Setting";
+import Taxis from "../Pages/Taxis";
 
 const Routers = ({ hide }) => {
     return (
@@ -16,6 +17,7 @@ const Routers = ({ hide }) => {
                 <Route path="login" element={<Login />} />
                 <Route path="chauffeur" element={<DriverPage  hide={hide}/>} />
                 <Route path="parametres" element={<Setting  hide={hide}/>} />
+                <Route path="taxis" element={<Taxis  hide={hide}/>} />
                 <Route path="chauffeur/:id" element={<DriverPageDetail hide={hide} />} />
                 <Route path="chauffeur/edit/:id" element={<DriverPageEdit hide={hide} />} />
             </Routes>

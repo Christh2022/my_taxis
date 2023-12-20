@@ -18,7 +18,7 @@ const DriverPage = ({ hide }) => {
         <div className={`Driver_list_content ${hide && "driver_isActive"}`}>
             <Driver handleAddDriver={handleAddDriver} />
             {add && (
-                <div className="add_new_driver">
+                <div className="add_new_driver" >
                     <h3>Ajoutez un nouveau chauffeur</h3>
                     <form onSubmit={handleSubmit}>
                         <div className="input_box_add">
