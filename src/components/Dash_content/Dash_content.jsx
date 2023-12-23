@@ -3,6 +3,7 @@ import UseGetData from "../../Hooks/UseGetData";
 import UseIcons from "../../Hooks/UseIcons";
 import UserAuth from "../../Hooks/UserAuth";
 import "./dashcontent.css";
+import UseFonction from "../../Hooks/UseFonction";
 
 const DashContent = () => {
     const { Depense, Revenu, Driver, Recette, Arrow } = UseIcons();
@@ -15,25 +16,9 @@ const DashContent = () => {
     const [depenseGreen, setDepenseGreen] = useState(false);
     const [benefice, setBenefice] = useState(0);
     const [conducteur, setConducteur] = useState(0);
-
-    const formatterNombre = (n) => {
-        if (n > 999) {
-            //convertir le nombre en chaine dde caractères
-            const str = String(n);
-
-            //créer un tableau vide
-            const parts = [];
-
-            for (let i = str.length; i > 0; i -= 3) {
-                //prendre des groupes de 3 chiffres à partir de la droite
-                parts.unshift(str.substring(Math.max(0, i - 3), i));
-            }
-            return parts.join("."); //joindre les parties avec un point
-        } else return n;
-    };
+    const { formatterNombre, handleDateRecette } = UseFonction();
 
     useEffect(() => {
-        console.log(data);
         const newTab = data?.filter((item) => item.id === currentUser.uid);
         setTab(newTab);
 
@@ -42,16 +27,13 @@ const DashContent = () => {
             let newTabRecette = [];
 
             for (let i = 0; i < tab[0]?.info_entreprise.chauffeur.length; i++) {
-                newTabDepense.push(
-                    tab[0]?.info_entreprise.chauffeur[i]?.depense[i]
-                );
+                newTabDepense = tab[0]?.info_entreprise.chauffeur[i]?.depense;
                 newTabRecette = tab[0]?.info_entreprise.chauffeur[i]?.recette;
             }
 
             setRecette(
                 newTabRecette.reduce((acc, val) => acc + val.montant, 0)
             );
-
             setDepense(
                 newTabDepense.reduce((acc, val) => acc + val.montant, 0) +
                     tab[0]?.info_entreprise.taxis.reduce(
@@ -59,11 +41,8 @@ const DashContent = () => {
                         0
                     )
             );
-
             setRecetteDay(newTabRecette);
-            console.log(newTabRecette[0]);
 
-            // console.log(recette);
             if (recette - depense === 0) {
                 setDepenseGreen(false);
             }
@@ -71,13 +50,10 @@ const DashContent = () => {
                 setBenefice(depense - recette);
                 setDepenseGreen(false);
             } else {
-                setDepenseGreen(false);
+                setDepenseGreen(true);
                 setBenefice(recette - depense);
             }
             setConducteur(tab[0]?.info_entreprise.chauffeur.length);
-            // console.log(recette);
-        } else {
-            console.log("erreur");
         }
     }, [data, currentUser.uid, depense, recette, benefice]);
     return (
@@ -150,17 +126,23 @@ const DashContent = () => {
             <div className="card_dash_stat_right">
                 <h2>Recettes par Jour </h2>
                 <div className="card_day_recette_info">
-                    {recetteDay ?.map((item, index) => (
-                        <div key={index} className="card_day_recette_item">
-                            <p>
-                                {item.date} : {formatterNombre(item.montant)}{" "}
-                                XAF
-                            </p>
-                            <span>
-                                <Arrow />
-                            </span>
-                        </div>
-                    ))}
+                    {recetteDay?.map(
+                        (item, index) =>
+                            handleDateRecette(item.date) !== "delete" && (
+                                <div
+                                    key={index}
+                                    className="card_day_recette_item"
+                                >
+                                    <p>
+                                        {handleDateRecette(item.date)} :{" "}
+                                        {formatterNombre(item.montant)} XAF
+                                    </p>
+                                    <span>
+                                        <Arrow />
+                                    </span>
+                                </div>
+                            )
+                    )}
                 </div>
             </div>
         </div>

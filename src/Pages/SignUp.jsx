@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { auth, firestore } from "../Firebase.config";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import UseFonction from "../Hooks/UseFonction";
 
 const SignUp = () => {
     const [email, setEmail] = useState();
@@ -12,6 +13,7 @@ const SignUp = () => {
     const [Age, setAge] = useState();
     const [address, setAddress] = useState();
     const [tel, setTel] = useState();
+    const { handleDay } = UseFonction();
 
     // Function to handle the submit event of the form.
     const handleSubmit = async (e) => {
@@ -52,18 +54,35 @@ const SignUp = () => {
                     address,
                     info_entreprise: {
                         taxis: [
-                            {title:'benoit 16', shortDesc: '', description: '', price: 1850000},
-                            {title:'benoit 16', shortDesc: '', description: '', price: 1850000},
-                            {title:'benoit 16', shortDesc: '', description: '', price: 2850000}
+                            {
+                                title: "benoit 16",
+                                shortDesc: "",
+                                description: "",
+                                price: 1850000,
+                            },
+                            {
+                                title: "benoit 16",
+                                shortDesc: "",
+                                description: "",
+                                price: 1850000,
+                            },
+                            {
+                                title: "benoit 16",
+                                shortDesc: "",
+                                description: "",
+                                price: 2850000,
+                            },
                         ],
                         chauffeur: [
                             {
                                 nom: "roldi christh",
                                 id: "aeaze124azeaze6azeaze897",
                                 recette: [
-                                    { date: "timestamp", montant: 1000 },
-                                    { date: "timestamp", montant: 1000 },
-                                    { date: "timestamp", montant: 1000 },
+                                    { date: handleDay(0), montant: 1000 },
+                                    { date: handleDay(1), montant: 1000 },
+                                    { date: handleDay(2), montant: 1000 },
+                                    { date: handleDay(3), montant: 1000 },
+                                    { date: handleDay(4), montant: 1000 },
                                 ],
                                 depense: [{ date: "timestamp", montant: 100 }],
                             },
