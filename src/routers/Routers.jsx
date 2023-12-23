@@ -7,19 +7,36 @@ import DriverPageDetail from "../Pages/DriverPageDetail";
 import DriverPageEdit from "../Pages/DriverPageEdit";
 import Setting from "../Pages/Setting";
 import Taxis from "../Pages/Taxis";
+import SignUp from "../Pages/SignUp";
+import PrivateRouter from "./PrivateRouter";
 
-const Routers = ({ hide }) => {
+const Routers = ({ hide, show }) => {
     return (
         <>
             <Routes>
-                <Route path="/" element={<Navigate to="home" />} />
-                <Route path="home" element={<Dashboard hide={hide} />} />
+                <Route path="signup" element={<SignUp />} />
                 <Route path="login" element={<Login />} />
-                <Route path="chauffeur" element={<DriverPage  hide={hide}/>} />
-                <Route path="parametres" element={<Setting  hide={hide}/>} />
-                <Route path="taxis" element={<Taxis  hide={hide}/>} />
-                <Route path="chauffeur/:id" element={<DriverPageDetail hide={hide} />} />
-                <Route path="chauffeur/edit/:id" element={<DriverPageEdit hide={hide} />} />
+                <Route path="/" element={<Navigate to="home" />} />
+                <Route element={<PrivateRouter />}>
+                    <Route path="home" element={<Dashboard hide={hide} show={show} />} />
+                    <Route
+                        path="chauffeur"
+                        element={<DriverPage hide={hide} show={show}  />}
+                    />
+                    <Route
+                        path="parametres"
+                        element={<Setting hide={hide} show={show}  />}
+                    />
+                    <Route path="taxis" element={<Taxis hide={hide} show={show} />} />
+                    <Route
+                        path="chauffeur/:id"
+                        element={<DriverPageDetail hide={hide} show={show} />}
+                    />
+                    <Route
+                        path="chauffeur/edit/:id"
+                        element={<DriverPageEdit hide={hide} show={show} />}
+                    />
+                </Route>
             </Routes>
         </>
     );
@@ -27,6 +44,9 @@ const Routers = ({ hide }) => {
 
 Routers.propTypes = {
     hide: PropTypes.bool.isRequired,
+    show: PropTypes.bool.isRequired,
 };
 
 export default Routers;
+
+
