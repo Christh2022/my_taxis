@@ -75,16 +75,28 @@ const SignUp = () => {
                         ],
                         chauffeur: [
                             {
-                                nom: "roldi christh",
+                                nom: "Mampassi Christh",
                                 id: "aeaze124azeaze6azeaze897",
                                 recette: [
-                                    { date: handleDay(0), montant: 1000 },
-                                    { date: handleDay(1), montant: 1000 },
-                                    { date: handleDay(2), montant: 1000 },
-                                    { date: handleDay(3), montant: 1000 },
-                                    { date: handleDay(4), montant: 1000 },
+                                    { date: handleDay(0), montant: 2000 },
+                                    { date: handleDay(1), montant: 2000 },
                                 ],
-                                depense: [{ date: "timestamp", montant: 100 }],
+                                depense: [
+                                    { date: handleDay(0), montant: 100 },
+                                    { date: handleDay(1), montant: 100 },
+                                ],
+                            },
+                            {
+                                nom: "Moukietou Roldi",
+                                id: "aeaze124azeaze6azeaze8971",
+                                recette: [
+                                    { date: handleDay(0), montant: 2000 },
+                                    { date: handleDay(1), montant: 2000 },
+                                ],
+                                depense: [
+                                    { date: handleDay(0), montant: 100 },
+                                    { date: handleDay(1), montant: 100 },
+                                ],
                             },
                         ],
                     },

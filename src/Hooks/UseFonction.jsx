@@ -1,4 +1,5 @@
 const UseFonction = () => {
+    //ecrire le nombre sous forme de 1.000.000
     const formatterNombre = (n) => {
         if (n > 999) {
             //convertir le nombre en chaine dde caractères
@@ -15,6 +16,7 @@ const UseFonction = () => {
         } else return n;
     };
 
+    //envoyer la date actuelle
     const handleDay = (a) => {
         let date = new Date();
         let day = date.getDate() - a;
@@ -30,19 +32,65 @@ const UseFonction = () => {
         return object;
     };
 
+    //comparer la date de la recette et la date d'aujourd'hui
     const handleDateRecette = (a) => {
         let date = new Date();
         let day = date.getDate();
 
-        if(day === a.day){
-            return "aujourd'hui"
-        } else if (day === a.day + 1){
-            return "hier"
-        }else if (day === a.day + 2){
-            return "avant-hier"
+        if (day === a.day) {
+            return "aujourd'hui";
+        } else if (day === a.day + 1) {
+            return "hier";
+        } else if (day === a.day + 2) {
+            return "avant-hier";
         } else return "delete";
     };
-    return { formatterNombre, handleDay, handleDateRecette };
+
+    //Gérer les pourcentages des bénéfices du mois
+    const handleBenefPercent = (a) => {
+        let percent = 0;
+
+        const date = new Date();
+        // Mois en JavaScript est indexé de 0 à 11, donc vous devrez ajouter 1 au mois
+        // Crée un nouvel objet Date avec l'année et le mois spécifiés et le jour 0 pour obtenir le dernier jour du mois
+        // En utilisant getDate(), récupère le nombre de jours dans le mois
+        const DayNbrperMonth = new Date(
+            date.getFullYear(),
+            date.getMonth() + 1,
+            0
+        ).getDate();
+        percent = (a / (15000 * DayNbrperMonth)).toFixed(2);
+
+        return percent;
+    };
+
+    //vous avez fourni et renvoie un tableau contenant les sommes des montants pour chaque date.
+    const regrouperParDate = (tableau) =>{
+        let montantsParDate = {};
+
+        tableau.forEach((objet) => {
+            let dateKey = `${objet.date.year}-${objet.date.month}-${objet.date.day}`;
+
+            if (!montantsParDate[dateKey]) {
+                montantsParDate[dateKey] = {
+                    montantTotal: objet.montant,
+                    date: objet.date,
+                };
+            } else {
+                montantsParDate[dateKey].montantTotal += objet.montant;
+            }
+        });
+
+        return Object.values(montantsParDate);
+    }
+
+    return {
+        formatterNombre,
+        handleDay,
+        handleDateRecette,
+        handleBenefPercent,
+        regrouperParDate
+    };
 };
 
 export default UseFonction;

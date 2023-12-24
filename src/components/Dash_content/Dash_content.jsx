@@ -1,61 +1,24 @@
-import { useEffect, useState } from "react";
-import UseGetData from "../../Hooks/UseGetData";
 import UseIcons from "../../Hooks/UseIcons";
-import UserAuth from "../../Hooks/UserAuth";
 import "./dashcontent.css";
 import UseFonction from "../../Hooks/UseFonction";
+import UseVariables from "../../Hooks/UseVariables";
 
 const DashContent = () => {
     const { Depense, Revenu, Driver, Recette, Arrow } = UseIcons();
-    const { data } = UseGetData("utilisateur");
-    const { currentUser } = UserAuth();
-    const [tab, setTab] = useState([]);
-    const [depense, setDepense] = useState(0);
-    const [recette, setRecette] = useState(0);
-    const [recetteDay, setRecetteDay] = useState([]);
-    const [depenseGreen, setDepenseGreen] = useState(false);
-    const [benefice, setBenefice] = useState(0);
-    const [conducteur, setConducteur] = useState(0);
-    const { formatterNombre, handleDateRecette } = UseFonction();
 
-    useEffect(() => {
-        const newTab = data?.filter((item) => item.id === currentUser.uid);
-        setTab(newTab);
+    const { formatterNombre, handleDateRecette, regrouperParDate } =
+        UseFonction();
+    const {
+        depense,
+        recette,
+        recetteDay,
+        depenseGreen,
+        benefice,
+        conducteur,
+    } = UseVariables();
 
-        if (data && data.length > 0) {
-            let newTabDepense = [];
-            let newTabRecette = [];
 
-            for (let i = 0; i < tab[0]?.info_entreprise.chauffeur.length; i++) {
-                newTabDepense = tab[0]?.info_entreprise.chauffeur[i]?.depense;
-                newTabRecette = tab[0]?.info_entreprise.chauffeur[i]?.recette;
-            }
 
-            setRecette(
-                newTabRecette.reduce((acc, val) => acc + val.montant, 0)
-            );
-            setDepense(
-                newTabDepense.reduce((acc, val) => acc + val.montant, 0) +
-                    tab[0]?.info_entreprise.taxis.reduce(
-                        (acc, val) => acc + val.price,
-                        0
-                    )
-            );
-            setRecetteDay(newTabRecette);
-
-            if (recette - depense === 0) {
-                setDepenseGreen(false);
-            }
-            if (recette - depense < 0) {
-                setBenefice(depense - recette);
-                setDepenseGreen(false);
-            } else {
-                setDepenseGreen(true);
-                setBenefice(recette - depense);
-            }
-            setConducteur(tab[0]?.info_entreprise.chauffeur.length);
-        }
-    }, [data, currentUser.uid, depense, recette, benefice]);
     return (
         <div className="card_dash_stat">
             <div className="card_dash_stat_left">
@@ -126,7 +89,7 @@ const DashContent = () => {
             <div className="card_dash_stat_right">
                 <h2>Recettes par Jour </h2>
                 <div className="card_day_recette_info">
-                    {recetteDay?.map(
+                    {regrouperParDate(recetteDay)?.map(
                         (item, index) =>
                             handleDateRecette(item.date) !== "delete" && (
                                 <div
@@ -135,7 +98,7 @@ const DashContent = () => {
                                 >
                                     <p>
                                         {handleDateRecette(item.date)} :{" "}
-                                        {formatterNombre(item.montant)} XAF
+                                        {formatterNombre(item.montantTotal)} XAF
                                     </p>
                                     <span>
                                         <Arrow />
