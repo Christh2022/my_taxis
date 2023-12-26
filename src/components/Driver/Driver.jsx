@@ -4,22 +4,23 @@ import profil from "../../assets/profil.jpg";
 import { useNavigate } from "react-router-dom";
 import UseIcons from "../../Hooks/UseIcons";
 import PropTypes from "prop-types";
+import UseVariables from "../../Hooks/UseVariables";
 
 const Driver = ({ handleAddDriver }) => {
     const { Search, Plus, Pencil, Eye, Delete } = UseIcons();
     const [resize, setResize] = useState(true);
     const navigate = useNavigate();
-
+    const {drivertab} = UseVariables();
     const HandleNavigate = (link) => {
-        console.log("hello");
         navigate(link);
     };
 
     useEffect(() => {
+        drivertab && console.log(drivertab);
         if (window.innerWidth < 760) {
             setResize(false);
         } else setResize(true);
-    }, []);
+    });
 
     return (
         <div className="driver_content_start">
@@ -50,66 +51,42 @@ const Driver = ({ handleAddDriver }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <img src={profil} alt="" />
-                                <span>John Doe</span>
-                            </td>
-                            {resize && <td>12345</td>}
-                            {resize && <td>123 Rue de la Fontaine</td>}
-                            <td>Actif</td>
-                            <td>
-                                <div className="icon_group">
-                                    <span
-                                        onClick={() =>
-                                            HandleNavigate("/chauffeur/edit/1")
-                                        }
-                                    >
-                                        <Pencil />
-                                    </span>
-                                    <span
-                                        onClick={() =>
-                                            HandleNavigate("/chauffeur/1")
-                                        }
-                                    >
-                                        <Eye />
-                                    </span>
-                                    <span>
-                                        <Delete />
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <img src={profil} alt="" />
-                                <span>John Doe</span>
-                            </td>
-                            {resize && <td>67890</td>}
-                            {resize && <td>456 Avenue des Fleurs</td>}
-                            <td>Inactif</td>
-                            <td>
-                                <div className="icon_group">
-                                    <span
-                                        onClick={() =>
-                                            HandleNavigate("/chauffeur/edit/1")
-                                        }
-                                    >
-                                        <Pencil />
-                                    </span>
-                                    <span
-                                        onClick={() =>
-                                            HandleNavigate("/chauffeur/1")
-                                        }
-                                    >
-                                        <Eye />
-                                    </span>
-                                    <span>
-                                        <Delete />
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
+                        {drivertab?.map((item) => (
+                            <tr key={item.id}>
+                                <td>
+                                    <img src={profil} alt="" />
+                                    <span>{item.nom}</span>
+                                </td>
+                                {resize && <td>{item.tel}</td>}
+                                {resize && <td>{item.adresse}</td>}
+                                <td>{item.statut}</td>
+                                <td>
+                                    <div className="icon_group">
+                                        <span
+                                            onClick={() =>
+                                                HandleNavigate(
+                                                    `/chauffeur/edit/${item.id} `
+                                                )
+                                            }
+                                        >
+                                            <Pencil />
+                                        </span>
+                                        <span
+                                            onClick={() =>
+                                                HandleNavigate(
+                                                    `/chauffeur/${item.id} `
+                                                )
+                                            }
+                                        >
+                                            <Eye />
+                                        </span>
+                                        <span>
+                                            <Delete />
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>

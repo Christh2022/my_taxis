@@ -37,6 +37,9 @@ const DriverPage = ({ hide, show }) => {
                                     <input type="text" placeholder="Age" />
                                 </div>
                                 <div className="input_box_add">
+                                    <input type="text" placeholder="Téléphone" />
+                                </div>
+                                <div className="input_box_add">
                                     <input
                                         type="text"
                                         placeholder="Nombre d'enfant"
@@ -52,6 +55,12 @@ const DriverPage = ({ hide, show }) => {
                                     <input
                                         type="text"
                                         placeholder="Date de prise de post"
+                                    />
+                                </div>
+                                <div className="input_box_add">
+                                    <input
+                                        type="text"
+                                        placeholder="Adresse"
                                     />
                                 </div>
                                 <div className="input_box_add">

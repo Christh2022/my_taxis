@@ -12,20 +12,9 @@ const DashContentTwo = () => {
     const { formatterNombre, handleBenefPercent } = UseFonction();
     const { benefice_mois, drivertab } = UseVariables();
 
-    useEffect(() => {
-        drivertab &&
-            drivertab.length > 0 &&
-            console.log(
-                drivertab[0]?.recette.reduce(
-                    (acc, val) => acc + val.montant,
-                    0
-                ) -
-                    drivertab[0]?.depense.reduce(
-                        (acc, val) => acc + val.montant,
-                        0
-                    )
-            );
-    });
+    // useEffect(() => {
+    //         console.log(benefice_mois);
+    // });
 
     return (
         <div className="Dash_content_two">

@@ -38,11 +38,11 @@ const UseFonction = () => {
         let day = date.getDate();
 
         if (day === a.day) {
-            return "aujourd'hui";
+            return "Auj";
         } else if (day === a.day + 1) {
-            return "hier";
+            return "Hier";
         } else if (day === a.day + 2) {
-            return "avant-hier";
+            return "Avant-hier";
         } else return "delete";
     };
 
@@ -65,7 +65,7 @@ const UseFonction = () => {
     };
 
     //vous avez fourni et renvoie un tableau contenant les sommes des montants pour chaque date.
-    const regrouperParDate = (tableau) =>{
+    const regrouperParDate = (tableau) => {
         let montantsParDate = {};
 
         tableau.forEach((objet) => {
@@ -82,14 +82,77 @@ const UseFonction = () => {
         });
 
         return Object.values(montantsParDate);
-    }
+    };
+
+    //Créer un tableau comportons les informations de la recette et des dépense
+    const createTableRecettesDepenses = (drivertab, id) => {
+        if (drivertab) {
+            const transactions = [];
+
+            drivertab
+                ?.filter((item) => item.id === id)[0]
+                ?.recette.forEach((recette) => {
+                    const macthingDepense = drivertab
+                        ?.filter((item) => item.id === id)[0]
+                        .depense.find(
+                            (depense) => depense.date.day === recette.date.day
+                        );
+                    if (macthingDepense) {
+                        transactions.push({
+                            date: recette.date,
+                            montantRecette: recette.montant,
+                            montantDepense: macthingDepense.montant,
+                        });
+                    }
+                });
+
+            return transactions;
+        }
+    };
+
+    //enregistrée un nouvel employé
+    const addEmployee = (
+        nom,
+        prenom,
+        age,
+        tel,
+        nombre_d_enfant,
+        statut_marital,
+        date_de_prise_de_post,
+        statut
+    ) => {
+        if (
+            nom &&
+            prenom &&
+            age &&
+            tel &&
+            nombre_d_enfant &&
+            statut_marital &&
+            date_de_prise_de_post &&
+            statut
+        ) {
+            const newEmploye = {
+                nom,
+                prenom,
+                age,
+                tel,
+                nombre_d_enfant,
+                statut_marital,
+                date_de_prise_de_post,
+                statut,
+            };
+
+            return newEmploye
+        }
+    };
 
     return {
         formatterNombre,
         handleDay,
         handleDateRecette,
         handleBenefPercent,
-        regrouperParDate
+        regrouperParDate,
+        createTableRecettesDepenses,
     };
 };
 

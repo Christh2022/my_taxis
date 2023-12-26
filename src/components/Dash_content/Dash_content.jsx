@@ -8,16 +8,8 @@ const DashContent = () => {
 
     const { formatterNombre, handleDateRecette, regrouperParDate } =
         UseFonction();
-    const {
-        depense,
-        recette,
-        recetteDay,
-        depenseGreen,
-        benefice,
-        conducteur,
-    } = UseVariables();
-
-
+    const { depense, recette, recetteDay, depenseGreen, benefice, conducteur } =
+        UseVariables();
 
     return (
         <div className="card_dash_stat">

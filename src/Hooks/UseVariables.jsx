@@ -22,7 +22,6 @@ const UseVariables = () => {
         if (data && data.length > 0) {
             let newTabDepense = [];
             let newTabRecette = [];
-            let newTabDriver = [];
 
             for (let i = 0; i < tab[0]?.info_entreprise.chauffeur.length; i++) {
                 newTabDepense.push(
@@ -32,6 +31,7 @@ const UseVariables = () => {
                     tab[0]?.info_entreprise.chauffeur[i]?.recette
                 );
             }
+
             let tableau_1 = newTabDepense
                 .map((item) => {
                     return { ...item };
@@ -46,16 +46,15 @@ const UseVariables = () => {
                 .map((objet) => Object.values(objet))
                 .flat();
 
-            newTabDriver = tab[0]?.info_entreprise.chauffeur;
-            setDriverTab(newTabDriver);
+            setDriverTab(tab[0]?.info_entreprise.chauffeur);
 
             const recette_mois = tableau_2
             .filter((item) => item.date.month === 12)
             .reduce((acc, val) => acc + val.montant, 0)
 
             const depense_mois = tableau_1
-                .filter((item) => item.date?.month === 12)
-                .reduce((acc, val) => acc + val.date.month, 0);
+                .filter((item) => item.date.month === 12)
+                .reduce((acc, val) => acc + val.montant, 0);
 
             setBenefice_mois(recette_mois - depense_mois);
             setRecette(tableau_2.reduce((acc, val) => acc + val.montant, 0));
@@ -66,7 +65,7 @@ const UseVariables = () => {
                         0
                     )
             );
-
+            
             setRecetteDay(tableau_2);
 
             if (recette - depense === 0) {
