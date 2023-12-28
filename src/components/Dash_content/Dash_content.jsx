@@ -2,14 +2,45 @@ import UseIcons from "../../Hooks/UseIcons";
 import "./dashcontent.css";
 import UseFonction from "../../Hooks/UseFonction";
 import UseVariables from "../../Hooks/UseVariables";
+import { useEffect } from "react";
 
 const DashContent = () => {
     const { Depense, Revenu, Driver, Recette, Arrow } = UseIcons();
 
     const { formatterNombre, handleDateRecette, regrouperParDate } =
         UseFonction();
-    const { depense, recette, recetteDay, depenseGreen, benefice, conducteur } =
-        UseVariables();
+    const {
+        tab,
+        table,
+        depense,
+        recette,
+        recetteDay,
+        depenseGreen,
+        benefice,
+        conducteur,
+    } = UseVariables();
+
+    // useEffect(() => {
+    //     const newTab = [];
+    //     for (
+    //         let index = 0;
+    //         index < tab[0]?.info_entreprise.chauffeur.length;
+    //         index++
+    //     ) {
+    //         const element = tab[0]?.info_entreprise.chauffeur[index]?.depense;
+    //         if (element.length > 0) {
+    //             newTab.push(element);
+    //         }
+    //     }
+    //     console.log(
+    //         newTab
+    //             .map((item) => {
+    //                 return { ...item };
+    //             })
+    //             ?.map((objet) => Object.values(objet))
+    //             .flat()
+    //     );
+    // });
 
     return (
         <div className="card_dash_stat">

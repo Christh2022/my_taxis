@@ -10,17 +10,19 @@ const Driver = ({ handleAddDriver }) => {
     const { Search, Plus, Pencil, Eye, Delete } = UseIcons();
     const [resize, setResize] = useState(true);
     const navigate = useNavigate();
-    const {drivertab} = UseVariables();
+    const {drivertab, tab} = UseVariables();
     const HandleNavigate = (link) => {
         navigate(link);
     };
 
     useEffect(() => {
-        drivertab && console.log(drivertab);
+        drivertab && console.log(tab);
         if (window.innerWidth < 760) {
             setResize(false);
         } else setResize(true);
     });
+
+
 
     return (
         <div className="driver_content_start">

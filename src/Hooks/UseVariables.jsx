@@ -15,6 +15,7 @@ const UseVariables = () => {
     const [benefice_mois, setBenefice_mois] = useState(0);
     const [conducteur, setConducteur] = useState(0);
     const [hide, setHide] = useState(false);
+    const [table, setTabe] = useState([]);
 
     useEffect(() => {
         const newTab = data?.filter((item) => item.id === currentUser?.uid);
@@ -23,10 +24,15 @@ const UseVariables = () => {
             let newTabDepense = [];
             let newTabRecette = [];
 
-            for (let i = 0; i < tab[0]?.info_entreprise.chauffeur.length; i++) {
+            for (
+                let i = 0;
+                i < tab[0]?.info_entreprise.chauffeur?.length;
+                i++
+            ) {
                 newTabDepense.push(
                     tab[0]?.info_entreprise.chauffeur[i]?.depense
                 );
+
                 newTabRecette.push(
                     tab[0]?.info_entreprise.chauffeur[i]?.recette
                 );
@@ -36,7 +42,7 @@ const UseVariables = () => {
                 .map((item) => {
                     return { ...item };
                 })
-                .map((objet) => Object.values(objet))
+                ?.map((objet) => Object.values(objet))
                 .flat();
 
             let tableau_2 = newTabRecette
@@ -46,11 +52,13 @@ const UseVariables = () => {
                 .map((objet) => Object.values(objet))
                 .flat();
 
+            setTabe(tab[0]);
+
             setDriverTab(tab[0]?.info_entreprise.chauffeur);
 
             const recette_mois = tableau_2
-            .filter((item) => item.date.month === 12)
-            .reduce((acc, val) => acc + val.montant, 0)
+                .filter((item) => item.date.month === 12)
+                .reduce((acc, val) => acc + val.montant, 0);
 
             const depense_mois = tableau_1
                 .filter((item) => item.date.month === 12)
@@ -60,12 +68,12 @@ const UseVariables = () => {
             setRecette(tableau_2.reduce((acc, val) => acc + val.montant, 0));
             setDepense(
                 tableau_1.reduce((acc, val) => acc + val.montant, 0) +
-                    tab[0]?.info_entreprise.taxis.reduce(
+                    tab[0]?.info_entreprise.taxis?.reduce(
                         (acc, val) => acc + val.price,
                         0
                     )
             );
-            
+
             setRecetteDay(tableau_2);
 
             if (recette - depense === 0) {
@@ -78,7 +86,7 @@ const UseVariables = () => {
                 setDepenseGreen(true);
                 setBenefice(recette - depense);
             }
-            setConducteur(tab[0]?.info_entreprise.chauffeur.length);
+            setConducteur(tab[0]?.info_entreprise.chauffeur?.length || 0);
         }
     }, [data, currentUser?.uid, depense, recette, benefice]);
     return {
@@ -93,6 +101,7 @@ const UseVariables = () => {
         conducteur,
         drivertab,
         benefice_mois,
+        table,
     };
 };
 

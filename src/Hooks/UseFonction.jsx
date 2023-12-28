@@ -1,3 +1,6 @@
+import { collection, getDoc,  updateDoc } from "firebase/firestore";
+import { firestore } from "../Firebase.config";
+
 const UseFonction = () => {
     //ecrire le nombre sous forme de 1.000.000
     const formatterNombre = (n) => {
@@ -111,7 +114,7 @@ const UseFonction = () => {
     };
 
     //enregistrée un nouvel employé
-    const addEmployee = (
+    const addEmployee = async(
         nom,
         prenom,
         age,
@@ -119,7 +122,8 @@ const UseFonction = () => {
         nombre_d_enfant,
         statut_marital,
         date_de_prise_de_post,
-        statut
+        statut,
+        id
     ) => {
         if (
             nom &&
@@ -129,7 +133,8 @@ const UseFonction = () => {
             nombre_d_enfant &&
             statut_marital &&
             date_de_prise_de_post &&
-            statut
+            statut,
+            id
         ) {
             const newEmploye = {
                 nom,
@@ -142,7 +147,22 @@ const UseFonction = () => {
                 statut,
             };
 
-            return newEmploye
+            try {
+                const documentSnapshot = await getDoc(collection(firestore, "utilisateur"));
+                if (documentSnapshot.exists()) {
+                  const documentData = documentSnapshot.data();
+                  
+                  // Mise à jour de la partie info_entreprise
+                  documentData.info_entreprise.chauffer = newEmploye;
+            
+                  // Mise à jour du document avec la nouvelle partie info_entreprise
+                  await updateDoc(collection(firestore, "utilisateur"), {chauffeur: newEmploye });
+                  console.log('Partie info_entreprise mise à jour avec succès');
+                } else {
+                  console.log('Le document spécifié n\'existe pas.');
+                }
+            } catch(e){}
+            // return newEmploye
         }
     };
 
@@ -153,6 +173,7 @@ const UseFonction = () => {
         handleBenefPercent,
         regrouperParDate,
         createTableRecettesDepenses,
+        addEmployee,
     };
 };
 
