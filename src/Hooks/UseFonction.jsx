@@ -1,7 +1,11 @@
-import { collection, getDoc,  updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { firestore } from "../Firebase.config";
+import { toast } from "react-toastify";
+import { useId } from "react";
 
 const UseFonction = () => {
+    const driverId = useId();
+
     //ecrire le nombre sous forme de 1.000.000
     const formatterNombre = (n) => {
         if (n > 999) {
@@ -20,9 +24,9 @@ const UseFonction = () => {
     };
 
     //envoyer la date actuelle
-    const handleDay = (a) => {
+    const handleDay = () => {
         let date = new Date();
-        let day = date.getDate() - a;
+        let day = date.getDate();
         let month = 1 + date.getMonth();
         let year = date.getFullYear();
 
@@ -114,11 +118,12 @@ const UseFonction = () => {
     };
 
     //enregistrée un nouvel employé
-    const addEmployee = async(
+    const addEmployee = async (
         nom,
         prenom,
         age,
         tel,
+        adresse,
         nombre_d_enfant,
         statut_marital,
         date_de_prise_de_post,
@@ -130,39 +135,187 @@ const UseFonction = () => {
             prenom &&
             age &&
             tel &&
+            adresse &&
             nombre_d_enfant &&
             statut_marital &&
             date_de_prise_de_post &&
-            statut,
-            id
+            statut
         ) {
             const newEmploye = {
+                id: driverId,
                 nom,
                 prenom,
+                adresse,
                 age,
                 tel,
                 nombre_d_enfant,
                 statut_marital,
                 date_de_prise_de_post,
                 statut,
+                depense: [],
+                recette: [],
             };
 
+            const documentSnapshot = await getDocs(
+                collection(firestore, "utilisateur")
+            );
+
             try {
-                const documentSnapshot = await getDoc(collection(firestore, "utilisateur"));
-                if (documentSnapshot.exists()) {
-                  const documentData = documentSnapshot.data();
-                  
-                  // Mise à jour de la partie info_entreprise
-                  documentData.info_entreprise.chauffer = newEmploye;
-            
-                  // Mise à jour du document avec la nouvelle partie info_entreprise
-                  await updateDoc(collection(firestore, "utilisateur"), {chauffeur: newEmploye });
-                  console.log('Partie info_entreprise mise à jour avec succès');
+                if (documentSnapshot) {
+                    const list = [];
+                    documentSnapshot.forEach((doc) => {
+                        list.push({ ...doc.data() });
+                    });
+                    const data = list.filter((item) => item.id === id);
+
+                    const newDriver = [];
+                    data[0].info_entreprise.chauffeur.forEach((item) => {
+                        newDriver.push(item);
+                    });
+
+                    if (
+                        data[0].info_entreprise.chauffeur.length ===
+                        newDriver.length
+                    ) {
+                        newDriver.push(newEmploye);
+
+                        updateDoc(doc(firestore, "utilisateur", id), {
+                            info_entreprise: {
+                                taxis: [
+                                    {
+                                        title: "benoit 16",
+                                        shortDesc: "",
+                                        description: "",
+                                        price: 1850000,
+                                    },
+                                    {
+                                        title: "benoit 16",
+                                        shortDesc: "",
+                                        description: "",
+                                        price: 1850000,
+                                    },
+                                    {
+                                        title: "benoit 16",
+                                        shortDesc: "",
+                                        description: "",
+                                        price: 2850000,
+                                    },
+                                ],
+                                chauffeur: newDriver,
+                            },
+                        });
+
+                        toast.success("le chauffeur a été ajouté avec success");
+                    }
                 } else {
-                  console.log('Le document spécifié n\'existe pas.');
+                    toast.error("Le document spécifié n'existe pas.");
                 }
-            } catch(e){}
-            // return newEmploye
+            } catch (e) {
+                toast.error("une erreur s'est produite.");
+            }
+        } else {
+            console.log("error");
+        }
+    };
+
+    //ajouter une date pour ajouter les recettes du chauffeur
+    const addRecette = async (date, recette, depense, id, idDriver) => {
+        if (date && recette && depense) {
+            const documentSnapshot = await getDocs(
+                collection(firestore, "utilisateur")
+            );
+
+            try {
+                // console.log(documentSnapshot);
+                if (documentSnapshot) {
+                    const tab = [];
+                    documentSnapshot.forEach((doc) => {
+                        tab.push({ ...doc.data() });
+                    });
+                    const data = tab.filter((item) => item.id === id);
+                    const recetteTab = [];
+                    const depenseTab = [];
+                    const driver = [];
+                    data[0].info_entreprise.chauffeur.forEach((item) => {
+                        if (item.id === idDriver) driver.push(item);
+                    });
+
+                    if (driver[0].recette.length > 0) {
+                        driver[0].recette?.forEach((recette) => {
+                            recetteTab.push(recette);
+                        });
+                    }
+
+                    
+                    if (driver[0].depense.length > 0) {
+                        driver[0].recette?.forEach((depense) => {
+                            recetteTab.push(depense);
+                        });
+                    }
+
+
+
+                    const newDriver = [];
+                    data[0].info_entreprise.chauffeur.forEach((item) => {
+                        if (item.id !== idDriver) newDriver.push(item);
+                        else {
+                            recetteTab.push({date, recette});
+                            depenseTab.push({date, depense})
+                            newDriver.push({ ...item, recette: recetteTab, depense: depenseTab });
+                        }
+                    });
+                    // updateDoc(doc(firestore, "utilisateur", id), {
+                    //     info_entreprise: {
+                    //         taxis: [
+                    //             {
+                    //                 title: "benoit 16",
+                    //                 shortDesc: "",
+                    //                 description: "",
+                    //                 price: 1850000,
+                    //             },
+                    //             {
+                    //                 title: "benoit 16",
+                    //                 shortDesc: "",
+                    //                 description: "",
+                    //                 price: 1850000,
+                    //             },
+                    //             {
+                    //                 title: "benoit 16",
+                    //                 shortDesc: "",
+                    //                 description: "",
+                    //                 price: 2850000,
+                    //             },
+                    //         ],
+                    //         chauffeur: newDriver,
+                    //     },
+                    // })
+
+                    console.log(newDriver);
+                }
+            } catch (error) {}
+
+            // try {
+            //     if (documentSnapshot) {
+            //         let tab = [];
+            //         documentSnapshot.forEach((item) => {
+            //             tab.push({ ...item.data() });
+            //         });
+
+            //         const data = tab.filter((item) => item.id === id);
+            //         // const newRecette = [];
+            //         // let driver = [];
+            //         // data[0].info_entreprise.chauffeur.forEach((item) => {
+            //         //     if (item.id === idDriver) {
+            //         //         driver = [...item.recette, ...item.depense];
+            //         //     }
+            //         // });
+            //         console.log(documentSnapshot);
+            //     }
+            // } catch (error) {
+            //     toast.error("une erreur s'est produit ");
+            // }
+        } else {
+            console.log("hello");
         }
     };
 
@@ -174,6 +327,7 @@ const UseFonction = () => {
         regrouperParDate,
         createTableRecettesDepenses,
         addEmployee,
+        addRecette,
     };
 };
 

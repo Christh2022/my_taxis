@@ -81,6 +81,7 @@ const SignUp = () => {
                                     { date: handleDay(0), montant: 2000 },
                                     { date: handleDay(1), montant: 2000 },
                                 ],
+                                tel: '+242 06 859 2345',
                                 depense: [
                                     { date: handleDay(0), montant: 100 },
                                     { date: handleDay(1), montant: 100 },
@@ -93,6 +94,7 @@ const SignUp = () => {
                                     { date: handleDay(0), montant: 2000 },
                                     { date: handleDay(1), montant: 2000 },
                                 ],
+                                tel: '+242 06 859 2345',
                                 depense: [
                                     { date: handleDay(0), montant: 100 },
                                     { date: handleDay(1), montant: 100 },
@@ -119,6 +121,7 @@ const SignUp = () => {
             // );
         }
     };
+    
     return (
         <div
             style={{

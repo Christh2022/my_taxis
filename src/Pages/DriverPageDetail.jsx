@@ -5,18 +5,26 @@ import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import UseVariables from "../Hooks/UseVariables";
 import UseFonction from "../Hooks/UseFonction";
+import UserAuth from "../Hooks/UserAuth";
 const DriverPageDetail = ({ hide, show }) => {
     const [tableau, setTableau] = useState([]);
-    // const [driverInfo, setDriverInfo] = useState([]);
     const [add, setAdd] = useState(false);
+    const [recette, setRecette] = useState();
+    const [depense, setDepense] = useState();
+    const [date, setDate] = useState();
     const scrollRef = useRef();
     const { id } = useParams();
     const { drivertab } = UseVariables();
-    const { createTableRecettesDepenses, formatterNombre } = UseFonction();
+    const { currentUser } = UserAuth();
+    const {
+        createTableRecettesDepenses,
+        formatterNombre,
+        addRecette,
+        handleDay,
+    } = UseFonction();
 
     useEffect(() => {
         setTableau(createTableRecettesDepenses(drivertab, id));
-        console.log(createTableRecettesDepenses(drivertab, id));
     }, [drivertab]);
 
     const handleAdd = () => {
@@ -34,6 +42,7 @@ const DriverPageDetail = ({ hide, show }) => {
         e.preventDefault();
         toast.success("les informations ont été enrégistré avec success");
         handleAdd();
+        addRecette(date, recette, depense, currentUser.uid, id);
     };
 
     return (
@@ -80,7 +89,13 @@ const DriverPageDetail = ({ hide, show }) => {
                                             </div>
                                             <div className="personol_item_info">
                                                 <span>Téléphone : </span>
-                                                <span>{value.numero}</span>
+                                                <span>{value.tel}</span>
+                                            </div>
+                                            <div className="personol_item_info">
+                                                <span>Statut Marital : </span>
+                                                <span>
+                                                    {value.statut_marital}
+                                                </span>
                                             </div>
                                             <div className="personol_item_info">
                                                 <span>
@@ -138,18 +153,21 @@ const DriverPageDetail = ({ hide, show }) => {
                                                 <td>
                                                     {formatterNombre(
                                                         item.montantRecette
-                                                    )} XAF
+                                                    )}{" "}
+                                                    XAF
                                                 </td>
                                                 <td>
                                                     {formatterNombre(
                                                         item.montantDepense
-                                                    )} XAF
+                                                    )}{" "}
+                                                    XAF
                                                 </td>
                                                 <td>
                                                     {formatterNombre(
                                                         item.montantRecette -
                                                             item.montantDepense
-                                                    )} XAF
+                                                    )}{" "}
+                                                    XAF
                                                 </td>
                                                 <td>
                                                     <button title="voir les informations sur les dépenses éffectuées">
@@ -166,15 +184,30 @@ const DriverPageDetail = ({ hide, show }) => {
                                     <form action="" onSubmit={handleSubmit}>
                                         <div className="input_group">
                                             <span>Jour</span>
-                                            <input type="date" />
+                                            <input
+                                                type="date"
+                                                onChange={(e) =>
+                                                    setDate(e.target.value)
+                                                }
+                                            />
                                         </div>
                                         <div className="input_group">
                                             <span>Recette</span>
-                                            <input type="text" />
+                                            <input
+                                                type="text"
+                                                onChange={(e) =>
+                                                    setRecette(e.target.value)
+                                                }
+                                            />
                                         </div>
                                         <div className="input_group">
                                             <span>Depénse</span>
-                                            <input type="text" />
+                                            <input
+                                                type="text"
+                                                onChange={(e) =>
+                                                    setDepense(e.target.value)
+                                                }
+                                            />
                                         </div>
                                         <div className="input_group">
                                             <span>Motif du dépense</span>
@@ -206,32 +239,34 @@ const DriverPageDetail = ({ hide, show }) => {
                                 <div className="statistique_benefice">
                                     <span>Total des Dépenses : </span>
                                     <span>
-                                        {tableau &&
-                                            tableau.length > 0 &&
-                                            formatterNombre(
-                                                tableau.reduce(
-                                                    (acc, val) =>
-                                                        acc +
-                                                        val.montantDepense,
-                                                    0
-                                                )
-                                            )} XAF
+                                        {tableau && tableau.length > 0
+                                            ? formatterNombre(
+                                                  tableau.reduce(
+                                                      (acc, val) =>
+                                                          acc +
+                                                          val.montantDepense,
+                                                      0
+                                                  )
+                                              )
+                                            : 0}{" "}
+                                        XAF
                                     </span>
                                 </div>
                                 <div className="statistique_benefice">
                                     <span>Total des Bénéfices : </span>
                                     <span>
-                                        {tableau &&
-                                            tableau.length > 0 &&
-                                            formatterNombre(
-                                                tableau.reduce(
-                                                    (acc, val) =>
-                                                        acc +
-                                                        val.montantRecette -
-                                                        val.montantDepense,
-                                                    0
-                                                )
-                                            )} XAF
+                                        {tableau && tableau.length > 0
+                                            ? formatterNombre(
+                                                  tableau.reduce(
+                                                      (acc, val) =>
+                                                          acc +
+                                                          val.montantRecette -
+                                                          val.montantDepense,
+                                                      0
+                                                  )
+                                              )
+                                            : 0}{" "}
+                                        XAF
                                     </span>
                                 </div>
 
@@ -240,7 +275,8 @@ const DriverPageDetail = ({ hide, show }) => {
                                     <span>
                                         {formatterNombre(
                                             tableau?.length * 4000
-                                        )} XAF
+                                        )}{" "}
+                                        XAF
                                     </span>
                                 </div>
                             </div>
