@@ -240,80 +240,53 @@ const UseFonction = () => {
                         if (item.id === idDriver) driver.push(item);
                     });
 
-                    if (driver[0].recette.length > 0) {
-                        driver[0].recette?.forEach((recette) => {
-                            recetteTab.push(recette);
-                        });
-                    }
+                    driver[0].recette?.forEach((recette) => {
+                        recetteTab.push(recette);
+                    });
 
-                    
-                    if (driver[0].depense.length > 0) {
-                        driver[0].recette?.forEach((depense) => {
-                            recetteTab.push(depense);
-                        });
-                    }
-
+                    driver[0].depense?.forEach((depense) => {
+                        depenseTab.push(depense);
+                    });
 
 
                     const newDriver = [];
                     data[0].info_entreprise.chauffeur.forEach((item) => {
                         if (item.id !== idDriver) newDriver.push(item);
                         else {
-                            recetteTab.push({date, recette});
-                            depenseTab.push({date, depense})
+                            recetteTab.push({date, montant: recette});
+                            depenseTab.push({date, montant: depense})
                             newDriver.push({ ...item, recette: recetteTab, depense: depenseTab });
                         }
                     });
-                    // updateDoc(doc(firestore, "utilisateur", id), {
-                    //     info_entreprise: {
-                    //         taxis: [
-                    //             {
-                    //                 title: "benoit 16",
-                    //                 shortDesc: "",
-                    //                 description: "",
-                    //                 price: 1850000,
-                    //             },
-                    //             {
-                    //                 title: "benoit 16",
-                    //                 shortDesc: "",
-                    //                 description: "",
-                    //                 price: 1850000,
-                    //             },
-                    //             {
-                    //                 title: "benoit 16",
-                    //                 shortDesc: "",
-                    //                 description: "",
-                    //                 price: 2850000,
-                    //             },
-                    //         ],
-                    //         chauffeur: newDriver,
-                    //     },
-                    // })
+                    updateDoc(doc(firestore, "utilisateur", id), {
+                        info_entreprise: {
+                            taxis: [
+                                {
+                                    title: "benoit 16",
+                                    shortDesc: "",
+                                    description: "",
+                                    price: 1850000,
+                                },
+                                {
+                                    title: "benoit 16",
+                                    shortDesc: "",
+                                    description: "",
+                                    price: 1850000,
+                                },
+                                {
+                                    title: "benoit 16",
+                                    shortDesc: "",
+                                    description: "",
+                                    price: 2850000,
+                                },
+                            ],
+                            chauffeur: newDriver,
+                        },
+                    })
 
-                    console.log(newDriver);
+                    // console.log(newDriver);
                 }
-            } catch (error) {}
-
-            // try {
-            //     if (documentSnapshot) {
-            //         let tab = [];
-            //         documentSnapshot.forEach((item) => {
-            //             tab.push({ ...item.data() });
-            //         });
-
-            //         const data = tab.filter((item) => item.id === id);
-            //         // const newRecette = [];
-            //         // let driver = [];
-            //         // data[0].info_entreprise.chauffeur.forEach((item) => {
-            //         //     if (item.id === idDriver) {
-            //         //         driver = [...item.recette, ...item.depense];
-            //         //     }
-            //         // });
-            //         console.log(documentSnapshot);
-            //     }
-            // } catch (error) {
-            //     toast.error("une erreur s'est produit ");
-            // }
+            } catch (error) {toast.error("une erreur s'est produite")}
         } else {
             console.log("hello");
         }

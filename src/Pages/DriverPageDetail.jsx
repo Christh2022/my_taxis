@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "./css/drivepagedetail.css";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import UseVariables from "../Hooks/UseVariables";
 import UseFonction from "../Hooks/UseFonction";
 import UserAuth from "../Hooks/UserAuth";
@@ -11,21 +11,19 @@ const DriverPageDetail = ({ hide, show }) => {
     const [add, setAdd] = useState(false);
     const [recette, setRecette] = useState();
     const [depense, setDepense] = useState();
+    const [motifDepense, setMotifDepense] = useState();
     const [date, setDate] = useState();
     const scrollRef = useRef();
     const { id } = useParams();
     const { drivertab } = UseVariables();
     const { currentUser } = UserAuth();
-    const {
-        createTableRecettesDepenses,
-        formatterNombre,
-        addRecette,
-        handleDay,
-    } = UseFonction();
+    const navigate = useNavigate();
+    const { createTableRecettesDepenses, formatterNombre, addRecette } =
+        UseFonction();
 
     useEffect(() => {
         setTableau(createTableRecettesDepenses(drivertab, id));
-    }, [drivertab]);
+    }, []);
 
     const handleAdd = () => {
         setAdd(!add);
@@ -40,9 +38,36 @@ const DriverPageDetail = ({ hide, show }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        toast.success("les informations ont été enrégistré avec success");
-        handleAdd();
-        addRecette(date, recette, depense, currentUser.uid, id);
+        if (date && recette && depense && motifDepense) {
+            const newRecette = Number(recette);
+            const newDepense = Number(depense);
+            const datTab = date.replace(/-/g, " ").split(" ").reverse();
+            const newData = {
+                day: Number(datTab[0]),
+                month: Number(datTab[1]),
+                year: Number(datTab[2]),
+            };
+
+            if (
+                typeof newRecette === "number" &&
+                typeof newDepense === "number" &&
+                typeof newData === "object"
+            ) {
+                handleAdd();
+                addRecette(
+                    newData,
+                    newRecette,
+                    newDepense,
+                    currentUser.uid,
+                    id
+                );
+                toast.success("vous venez de rajouter une recette");
+                navigate('/')
+            } else
+                toast.error(
+                    "la recette et les dépenses doivent etre des nombres allant de 0 à l'infini"
+                );
+        } else toast.error("Tous les champs doivent être remplis");
     };
 
     return (
@@ -216,6 +241,11 @@ const DriverPageDetail = ({ hide, show }) => {
                                                 id=""
                                                 cols="30"
                                                 rows="10"
+                                                onChange={(e) =>
+                                                    setMotifDepense(
+                                                        e.target.value
+                                                    )
+                                                }
                                             />
                                         </div>
                                         <button>Enregistrez</button>

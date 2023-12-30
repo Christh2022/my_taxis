@@ -20,27 +20,24 @@ const DashContent = () => {
         conducteur,
     } = UseVariables();
 
-    // useEffect(() => {
-    //     const newTab = [];
-    //     for (
-    //         let index = 0;
-    //         index < tab[0]?.info_entreprise.chauffeur.length;
-    //         index++
-    //     ) {
-    //         const element = tab[0]?.info_entreprise.chauffeur[index]?.depense;
-    //         if (element.length > 0) {
-    //             newTab.push(element);
-    //         }
-    //     }
-    //     console.log(
-    //         newTab
-    //             .map((item) => {
-    //                 return { ...item };
-    //             })
-    //             ?.map((objet) => Object.values(objet))
-    //             .flat()
-    //     );
-    // });
+    useEffect(() => {
+        const newTab = [];
+
+        for (
+            let i = 0;
+            i < tab[0]?.info_entreprise.chauffeur?.length;
+            i++
+        ) {
+            newTab.push(
+                tab[0]?.info_entreprise.chauffeur[i]?.depense
+            );
+        }
+       console.log(newTab.map((item) => {
+        return { ...item };
+    })
+    ?.map((objet) => Object.values(objet))
+    .flat());
+    });
 
     return (
         <div className="card_dash_stat">
