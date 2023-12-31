@@ -9,6 +9,8 @@ import Setting from "../Pages/Setting";
 import Taxis from "../Pages/Taxis";
 import SignUp from "../Pages/SignUp";
 import PrivateRouter from "./PrivateRouter";
+import TaxisDetail from "../Pages/TaxisDetail";
+import AddTaxis from "../Pages/AddTaxis";
 
 const Routers = ({ hide, show }) => {
     return (
@@ -27,7 +29,15 @@ const Routers = ({ hide, show }) => {
                         path="parametres"
                         element={<Setting hide={hide} show={show}  />}
                     />
-                    <Route path="taxis" element={<Taxis hide={hide} show={show} />} />
+                    <Route path="taxis" element={<Taxis hide={hide} />} />
+                    <Route
+                        path="taxis/:id"
+                        element={<TaxisDetail hide={hide}  />}
+                    />
+                    <Route
+                        path="taxis/ajout"
+                        element={<AddTaxis hide={hide} />}
+                    />
                     <Route
                         path="chauffeur/:id"
                         element={<DriverPageDetail hide={hide} show={show} />}

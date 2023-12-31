@@ -28,7 +28,7 @@ const Layout = () => {
             ) : (
                 show && (<NavBar hide={hide} setHide={setHide} HideMenu={HideMenu} />) 
             )}
-            <Routers hide={hide} setHide={setHide} show={show}/>
+            {show && <Routers hide={hide} setHide={setHide} show={show}/>}
         </div>
     );
 };

@@ -6,7 +6,7 @@
     left: 290px;
     width: auto;
     height: 100vh;
-    padding: 1rem 0rem;
+    padding: 1rem 0.8rem;
     padding-bottom: 0;
     overflow-y: scroll;
     transition: all 0.3s ease;
@@ -18,16 +18,38 @@
 }
 
 .container_taxis_list {
+    width: auto;
+}
+
+.taxis_list_content.detail_taxis {
+    padding: 1rem 0.8rem;
+}
+
+.content_taxis h1 {
+    font-size: calc(1.5rem - 0.3vw);
+    padding: 0.8rem 0;
+}
+
+.taxiDetail_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 16px;
+}
+
+.container_taxis_list {
     padding: 0rem 1rem;
     width: 100%;
 }
 
 .taxis_list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-    width: 100%;
-    padding: 1rem 0;
+    width: auto;
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 2rem 0;
+    padding-right: 1rem;
 }
 
 .taxis_list li {
@@ -35,11 +57,9 @@
     justify-content: center;
     display: flex;
     flex-direction: column;
-    width: calc(78% / 3);
     background: #444;
     padding: 16px;
-    border-radius: .3rem;
-    /* margin: 7px; */
+    border-radius: 0.3rem;
 }
 
 .taxis_list li img {
@@ -49,11 +69,11 @@
 
 .taxis_list li h5 {
     font-size: calc(1.2rem - 0.2vw);
-    padding: .5rem 0;
+    padding: 0.5rem 0;
     position: relative;
 }
 
-.taxis_list li h5::before{
+.taxis_list li h5::before {
     content: "";
     position: absolute;
     width: 3rem;
@@ -75,18 +95,28 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    
 }
 
-.taxis_list li button{
+.taxis_list li button {
     background: #fad02c;
     color: #222;
     border: none;
     outline: none;
     padding: 0.5rem 1.3rem;
-    border-radius: .3rem;
+    border-radius: 0.3rem;
     cursor: pointer;
     margin-top: 1rem;
+}
+
+@media (min-width: 1260px) {
+    .taxis_list {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+@media (max-width: 1160px) {
+    .taxis_list {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 @media (max-width: 960px) {
@@ -103,13 +133,19 @@
     .gallery_wrapper .image {
         width: calc(100% / 3);
     }
+
+    .taxis_list {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 @media (max-width: 760px) {
     .taxis_list li {
-        width: calc(78% / 2);
         padding: 14px;
-        /* margin: 7px; */
+    }
+
+    .taxis_list {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 @media (max-width: 560px) {
@@ -120,6 +156,7 @@
         right: 0;
         height: auto;
         padding-bottom: 0;
+        padding-left: 0;
     }
 
     .taxis_list li {
@@ -127,7 +164,6 @@
         justify-content: center;
         display: flex;
         flex-direction: column;
-        width: calc(79% / 2);
         background: #444;
         padding: 13px;
         /* margin: 7px; */
