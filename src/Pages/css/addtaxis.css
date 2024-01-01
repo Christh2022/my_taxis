@@ -1,0 +1,86 @@
+.addtaxis form {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.addtaxis form .goup_of_input {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    width: auto;
+    padding-bottom: 2rem;
+}
+
+.input_gruop label {
+    text-align: left;
+    font-size: calc(1.1rem - .4vw);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 90%;
+}
+
+.input_gruop {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: auto;
+}
+
+.input_gruop select,
+.input_gruop input {
+    width: 83%;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.3rem;
+    outline: none;
+    background: #555;
+}
+
+.input_gruop select {
+    width: 90%;
+}
+
+.addtaxis form button {
+    width: calc(12rem - 0.3vw);
+    border: none;
+    border-radius: 0.3rem;
+    padding: 0.5rem 1rem;
+    background: #fad02c;
+    color: #111;
+    cursor: pointer;
+    font-size: calc(1.2rem - 0.3vw);
+}
+
+@media (max-width: 960px) {
+    .input_gruop input {
+        width: 80%;
+    }
+
+    .addtaxis form .goup_of_input {
+        gap: 1.03rem;
+    }
+}
+@media (max-width: 760px) {
+    .addtaxis form .goup_of_input {
+        grid-template-columns: repeat(2, 1fr);
+        gap: .5rem;
+    }
+
+    .input_gruop input {
+        width: 78%;
+    }
+}
+@media (max-width: 560px) {
+    .taxis_list_content.addtaxis {
+        padding: 0rem 1rem;
+    }
+    .addtaxis form .goup_of_input {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .input_gruop input {
+        width: 90%;
+    }
+}
