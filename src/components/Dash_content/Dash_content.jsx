@@ -2,42 +2,14 @@ import UseIcons from "../../Hooks/UseIcons";
 import "./dashcontent.css";
 import UseFonction from "../../Hooks/UseFonction";
 import UseVariables from "../../Hooks/UseVariables";
-import { useEffect } from "react";
 
 const DashContent = () => {
     const { Depense, Revenu, Driver, Recette, Arrow } = UseIcons();
 
     const { formatterNombre, handleDateRecette, regrouperParDate } =
         UseFonction();
-    const {
-        tab,
-        table,
-        depense,
-        recette,
-        recetteDay,
-        depenseGreen,
-        benefice,
-        conducteur,
-    } = UseVariables();
-
-    useEffect(() => {
-        const newTab = [];
-
-        for (
-            let i = 0;
-            i < tab[0]?.info_entreprise.chauffeur?.length;
-            i++
-        ) {
-            newTab.push(
-                tab[0]?.info_entreprise.chauffeur[i]?.depense
-            );
-        }
-       console.log(newTab.map((item) => {
-        return { ...item };
-    })
-    ?.map((objet) => Object.values(objet))
-    .flat());
-    });
+    const { depense, recette, recetteDay, depenseGreen, benefice, conducteur } =
+        UseVariables();
 
     return (
         <div className="card_dash_stat">
@@ -109,7 +81,19 @@ const DashContent = () => {
             <div className="card_dash_stat_right">
                 <h2>Recettes par Jour </h2>
                 <div className="card_day_recette_info">
-                    {regrouperParDate(recetteDay)?.map(
+                    {regrouperParDate(recetteDay).sort((a, b) =>{
+                        const dateA = new Date(
+                            a.date.year,
+                            a.date.month - 1,
+                            a.date.day
+                        );
+                        const dateB = new Date(
+                            b.date.year,
+                            b.date.month - 1,
+                            b.date.day
+                        );
+                        return dateB - dateA;
+                    })?.map(
                         (item, index) =>
                             handleDateRecette(item.date) !== "delete" && (
                                 <div

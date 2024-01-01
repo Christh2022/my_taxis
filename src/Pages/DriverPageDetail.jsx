@@ -166,12 +166,12 @@ const DriverPageDetail = ({ hide, show }) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {tableau?.map((item, index) => (
+                                        {createTableRecettesDepenses(drivertab, id)?.map((item, index) => (
                                             <tr key={index}>
                                                 <td>
-                                                    {item.date?.day +
+                                                    {`${(String(item.date?.day).length <=1) ? `0${item.date?.day}` : item.date?.day }`+
                                                         "/" +
-                                                        item.date?.month +
+                                                        `${(String(item.date?.month).length <=1) ? `0${item.date?.month}` : item.date?.month }` +
                                                         "/" +
                                                         item.date?.year}
                                                 </td>

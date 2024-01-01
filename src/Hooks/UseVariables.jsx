@@ -7,6 +7,7 @@ const UseVariables = () => {
     const { currentUser } = UserAuth();
     const [tab, setTab] = useState([]);
     const [drivertab, setDriverTab] = useState([]);
+    const [carTab, setCarTab] = useState([]);
     const [depense, setDepense] = useState(0);
     const [recette, setRecette] = useState(0);
     const [recetteDay, setRecetteDay] = useState([]);
@@ -16,6 +17,7 @@ const UseVariables = () => {
     const [conducteur, setConducteur] = useState(0);
     const [hide, setHide] = useState(false);
     const [table, setTabe] = useState([]);
+    const newDate = new Date();
 
     useEffect(() => {
         const newTab = data?.filter((item) => item.id === currentUser?.uid);
@@ -55,16 +57,26 @@ const UseVariables = () => {
             setTabe(tab[0]);
 
             setDriverTab(tab[0]?.info_entreprise.chauffeur);
+            setCarTab(tab[0]?.info_entreprise.taxis);
 
-            const recette_mois = tableau_2
-                .filter((item) => item.date.month === 12)
-                .reduce((acc, val) => acc + val.montant, 0);
+            if (
+                tableau_2.filter(
+                    (item) => item.date.month === newDate.getMonth() + 1
+                ).length > 0 &&
+                tableau_1.filter(
+                    (item) => item.date.month === newDate.getMonth() + 1
+                ).length > 0
+            ) {
+                const recette_mois = tableau_2
+                    .filter((item) => item.date.month === newDate.getMonth() + 1)
+                    .reduce((acc, val) => acc + val.montant, 0);
 
-            const depense_mois = tableau_1
-                .filter((item) => item.date.month === 12)
-                .reduce((acc, val) => acc + val.montant, 0);
+                const depense_mois = tableau_1
+                    .filter((item) => item.date.month === newDate.getMonth() + 1)
+                    .reduce((acc, val) => acc + val.montant, 0);
+                setBenefice_mois(recette_mois - depense_mois);
+            } else setBenefice_mois(0)
 
-            setBenefice_mois(recette_mois - depense_mois);
             setRecette(tableau_2.reduce((acc, val) => acc + val.montant, 0));
             setDepense(
                 tableau_1.reduce((acc, val) => acc + val.montant, 0) +
@@ -102,6 +114,7 @@ const UseVariables = () => {
         drivertab,
         benefice_mois,
         table,
+        carTab,
     };
 };
 

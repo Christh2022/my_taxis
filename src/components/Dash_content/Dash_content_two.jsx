@@ -4,7 +4,6 @@ import logo from "../../assets/profil.jpg";
 import { useNavigate } from "react-router-dom";
 import UseVariables from "../../Hooks/UseVariables";
 import UseFonction from "../../Hooks/UseFonction";
-import { useEffect } from "react";
 
 const DashContentTwo = () => {
     const { Benefit, Chart } = UseIcons();
@@ -30,11 +29,15 @@ const DashContentTwo = () => {
                         style={
                             benefice_mois !== 0
                                 ? { color: "#2ECC71" }
+                                : benefice_mois === 0
+                                ? { color: "#fff" }
                                 : { color: "#FB1212" }
                         }
                     >
                         {benefice_mois !== 0
                             ? ` ${formatterNombre(benefice_mois)}`
+                            : benefice_mois === 0
+                            ? formatterNombre(benefice_mois)
                             : `- ${formatterNombre(benefice_mois)}`}{" "}
                         XAF
                     </h3>

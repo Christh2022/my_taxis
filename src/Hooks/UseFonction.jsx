@@ -1,10 +1,12 @@
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { firestore } from "../Firebase.config";
 import { toast } from "react-toastify";
-import { useId } from "react";
+import UseVariables from "./UseVariables";
+import { v4 } from 'uuid';
 
 const UseFonction = () => {
-    const driverId = useId();
+    const driverId = v4()
+    const { carTab } = UseVariables();
 
     //ecrire le nombre sous forme de 1.000.000
     const formatterNombre = (n) => {
@@ -41,16 +43,47 @@ const UseFonction = () => {
 
     //comparer la date de la recette et la date d'aujourd'hui
     const handleDateRecette = (a) => {
-        let date = new Date();
-        let day = date.getDate();
+        const today = new Date();
+        const date = new Date(a.year, a.month - 1, a.day);
+        const diffInDays =
+            (today.getTime() - date.getTime()) / (1000 * 3600 * 24);
 
-        if (day === a.day) {
-            return "Auj";
-        } else if (day === a.day + 1) {
+        if (
+            (diffInDays < 1 &&
+                today.getDate() === date.getDate() &&
+                today.getMonth() === date.getMonth()) ||
+            (diffInDays < 1 &&
+                today.getDate() === 1 &&
+                today.getMonth() === 0 &&
+                date.getDate() === 31 &&
+                date.getMonth() === 11)
+        ) {
+            return "Aujourd'hui";
+        } else if (
+            (diffInDays < 1 &&
+                today.getDate() - date.getDate() === 1 &&
+                today.getMonth() === date.getMonth()) ||
+            (diffInDays < 2 &&
+                today.getDate() === 1 &&
+                today.getMonth() === 0 &&
+                date.getDate() === 31 &&
+                date.getMonth() === 11)
+        ) {
             return "Hier";
-        } else if (day === a.day + 2) {
+        } else if (
+            (diffInDays < 2 &&
+                today.getDate() - date.getDate() === 2 &&
+                today.getMonth() === date.getMonth()) ||
+            (diffInDays < 3 &&
+                today.getDate() === 1 &&
+                today.getMonth() === 0 &&
+                date.getDate() === 30 &&
+                date.getMonth() === 11)
+        ) {
             return "Avant-hier";
-        } else return "delete";
+        } else {
+            return "delete";
+        }
     };
 
     //Gérer les pourcentages des bénéfices du mois
@@ -113,7 +146,22 @@ const UseFonction = () => {
                     }
                 });
 
-            return transactions;
+            // Tri des données par date (du plus récent au plus ancien)
+            const sortedData = transactions.sort((a, b) => {
+                const dateA = new Date(
+                    a.date.year,
+                    a.date.month - 1,
+                    a.date.day
+                );
+                const dateB = new Date(
+                    b.date.year,
+                    b.date.month - 1,
+                    b.date.day
+                );
+                return dateB - dateA;
+            });
+
+            return sortedData;
         }
     };
 
@@ -181,26 +229,7 @@ const UseFonction = () => {
 
                         updateDoc(doc(firestore, "utilisateur", id), {
                             info_entreprise: {
-                                taxis: [
-                                    {
-                                        title: "benoit 16",
-                                        shortDesc: "",
-                                        description: "",
-                                        price: 1850000,
-                                    },
-                                    {
-                                        title: "benoit 16",
-                                        shortDesc: "",
-                                        description: "",
-                                        price: 1850000,
-                                    },
-                                    {
-                                        title: "benoit 16",
-                                        shortDesc: "",
-                                        description: "",
-                                        price: 2850000,
-                                    },
-                                ],
+                                taxis: data[0].info_entreprise.taxis,
                                 chauffeur: newDriver,
                             },
                         });
@@ -220,7 +249,7 @@ const UseFonction = () => {
 
     //ajouter une date pour ajouter les recettes du chauffeur
     const addRecette = async (date, recette, depense, id, idDriver) => {
-        if (date && recette && depense) {
+        if (date && recette && depense >= 0) {
             const documentSnapshot = await getDocs(
                 collection(firestore, "utilisateur")
             );
@@ -248,47 +277,97 @@ const UseFonction = () => {
                         depenseTab.push(depense);
                     });
 
-
                     const newDriver = [];
                     data[0].info_entreprise.chauffeur.forEach((item) => {
                         if (item.id !== idDriver) newDriver.push(item);
                         else {
-                            recetteTab.push({date, montant: recette});
-                            depenseTab.push({date, montant: depense})
-                            newDriver.push({ ...item, recette: recetteTab, depense: depenseTab });
+                            recetteTab.push({ date, montant: recette });
+                            depenseTab.push({ date, montant: depense });
+                            newDriver.push({
+                                ...item,
+                                recette: recetteTab,
+                                depense: depenseTab,
+                            });
                         }
                     });
                     updateDoc(doc(firestore, "utilisateur", id), {
                         info_entreprise: {
-                            taxis: [
-                                {
-                                    title: "benoit 16",
-                                    shortDesc: "",
-                                    description: "",
-                                    price: 1850000,
-                                },
-                                {
-                                    title: "benoit 16",
-                                    shortDesc: "",
-                                    description: "",
-                                    price: 1850000,
-                                },
-                                {
-                                    title: "benoit 16",
-                                    shortDesc: "",
-                                    description: "",
-                                    price: 2850000,
-                                },
-                            ],
+                            taxis: data[0].info_entreprise.taxis,
                             chauffeur: newDriver,
                         },
-                    })
-
-                    // console.log(newDriver);
+                    });
                 }
-            } catch (error) {toast.error("une erreur s'est produite")}
+            } catch (error) {
+                toast.error("une erreur s'est produite");
+            }
         } else {
             console.log("hello");
+        }
+    };
+
+    //ajouter une nouvelle voiture
+    const AddNewCar = async (
+        marque,
+        modele,
+        type,
+        madeYear,
+        places,
+        numeroSerie,
+        carburant,
+        kilometrage,
+        n_matricule,
+        date_inspection,
+        achat_date,
+        prix_achat,
+        assurance_date,
+        chauffeur,
+        statut,
+        id
+    ) => {
+        const documentSnapshot = await getDocs(
+            collection(firestore, "utilisateur")
+        );
+
+        if (documentSnapshot) {
+            const tab = [];
+            const newCar = [];
+
+            documentSnapshot.forEach((item) => {
+                tab.push({ ...item.data() });
+            });
+
+            const data = tab.filter((item) => item.id === id);
+
+            console.log(data[0]);
+
+            carTab.forEach((item) => {
+                newCar.push(item);
+            });
+
+            newCar.push({
+                marque,
+                modele,
+                type,
+                madeYear,
+                places,
+                numeroSerie,
+                carburant,
+                kilometrage,
+                n_matricule,
+                date_inspection,
+                achat_date,
+                price: Number(prix_achat),
+                assurance_date,
+                chauffeur,
+                statut,
+            });
+
+            updateDoc(doc(firestore, "utilisateur", id), {
+                info_entreprise: {
+                    taxis: newCar,
+                    chauffeur: data[0].info_entreprise.chauffeur,
+                },
+            });
         }
     };
 
@@ -301,6 +380,7 @@ const UseFonction = () => {
         createTableRecettesDepenses,
         addEmployee,
         addRecette,
+        AddNewCar,
     };
 };
 
