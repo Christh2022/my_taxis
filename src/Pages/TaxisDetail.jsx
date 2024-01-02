@@ -8,9 +8,8 @@ import UseFonction from "../Hooks/UseFonction";
 import UseIcons from "../Hooks/UseIcons";
 
 const TaxisDetail = ({ hide }) => {
-    const [newTab, setNewTab] = useState([]);
     const [date, setDate] = useState();
-    const [Price, setPrice] = useState();
+    const [price, setPrice] = useState();
     const [motif, setMotif] = useState();
     const [addMotifDepense, setAddMotifDepense] = useState(false);
     const { tab } = UseVariables();
@@ -35,6 +34,11 @@ const TaxisDetail = ({ hide }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         handleAddMotifDepense();
+        const obj = {
+            date, price, motif
+        }
+
+        console.log(obj);
     };
 
     return (
