@@ -16,6 +16,7 @@ const Routers = ({ hide, show }) => {
     return (
         <>
             <Routes>
+                
                 <Route path="signup" element={<SignUp />} />
                 <Route path="login" element={<Login />} />
                 <Route path="/" element={<Navigate to="home" />} />
@@ -29,14 +30,14 @@ const Routers = ({ hide, show }) => {
                         path="parametres"
                         element={<Setting hide={hide} show={show}  />}
                     />
-                    <Route path="taxis" element={<Taxis hide={hide} />} />
+                    <Route path="taxis" element={<Taxis hide={hide}  show={show} />} />
                     <Route
                         path="taxis/:id"
                         element={<TaxisDetail hide={hide}  />}
                     />
                     <Route
                         path="taxis/ajout"
-                        element={<AddTaxis hide={hide} />}
+                        element={<AddTaxis hide={hide}  show={show}  />}
                     />
                     <Route
                         path="chauffeur/:id"
@@ -47,14 +48,15 @@ const Routers = ({ hide, show }) => {
                         element={<DriverPageEdit hide={hide} show={show} />}
                     />
                 </Route>
+                
             </Routes>
         </>
     );
 };
 
 Routers.propTypes = {
-    hide: PropTypes.bool.isRequired,
-    show: PropTypes.bool.isRequired,
+    hide: PropTypes.bool,
+    show: PropTypes.bool,
 };
 
 export default Routers;

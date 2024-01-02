@@ -208,6 +208,7 @@
 @media (max-width: 560px) {
     .Dash_content_two {
         flex-direction: column;
+        gap: 0;
         padding-bottom: 0;
         margin-bottom: 0.3rem;
     }

@@ -58,7 +58,7 @@ const UseFonction = () => {
                 date.getDate() === 31 &&
                 date.getMonth() === 11)
         ) {
-            return "Aujourd'hui";
+            return "Auj";
         } else if (
             (diffInDays < 1 &&
                 today.getDate() - date.getDate() === 1 &&

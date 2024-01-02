@@ -319,8 +319,8 @@ const DriverPageDetail = ({ hide, show }) => {
 };
 
 DriverPageDetail.propTypes = {
-    hide: PropTypes.bool.isRequired,
-    show: PropTypes.bool.isRequired,
+    hide: PropTypes.bool,
+    show: PropTypes.bool,
 };
 
 export default DriverPageDetail;

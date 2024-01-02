@@ -124,6 +124,7 @@
     }
 
     .card_dash_stat .card_dash_stat_right {
+        padding-bottom: 1rem;
         width: 100%;
     }
 
@@ -143,5 +144,9 @@
     .card_dash_stat .text_dash span,
     .card_dash_stat h3 {
         font-size: calc(0.8rem - 0.3vw);
+    }
+
+    .card_dash_stat .card_dash_stat_left .card_dash_stat_item {
+        padding: 1rem .8rem;
     }
 }

@@ -270,7 +270,7 @@ const AddTaxis = ({ hide }) => {
                             <option value="">
                                 veuillez choisir un chauffeur
                             </option>
-                            <option value="pas_de_chauffeur">
+                            <option value="aucun chauffeu">
                                 Aucun Chauffeur
                             </option>
                             {tab[0]?.info_entreprise.chauffeur?.filter((value) => value.statut !== 'actif')?.map((item) => (
