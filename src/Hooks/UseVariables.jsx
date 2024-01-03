@@ -68,18 +68,29 @@ const UseVariables = () => {
                 ).length > 0
             ) {
                 const recette_mois = tableau_2
-                    .filter((item) => item.date.month === newDate.getMonth() + 1)
+                    .filter(
+                        (item) => item.date.month === newDate.getMonth() + 1
+                    )
                     .reduce((acc, val) => acc + val.montant, 0);
 
                 const depense_mois = tableau_1
-                    .filter((item) => item.date.month === newDate.getMonth() + 1)
+                    .filter(
+                        (item) => item.date.month === newDate.getMonth() + 1
+                    )
                     .reduce((acc, val) => acc + val.montant, 0);
                 setBenefice_mois(recette_mois - depense_mois);
-            } else setBenefice_mois(0)
+            } else setBenefice_mois(0);
+
+            const Cardepense = [];
+            carTab?.forEach((element) => {
+                element.motifDepense.forEach((item) => {
+                    Cardepense.push(item);
+                });
+            });
 
             setRecette(tableau_2.reduce((acc, val) => acc + val.montant, 0));
             setDepense(
-                tableau_1.reduce((acc, val) => acc + val.montant, 0) +
+                Cardepense.reduce((acc, val) => acc + Number(val.price), 0) +
                     tab[0]?.info_entreprise.taxis?.reduce(
                         (acc, val) => acc + val.price,
                         0

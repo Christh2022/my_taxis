@@ -2,20 +2,25 @@ import PropTypes from "prop-types";
 // import UseIcons from "../Hooks/UseIcons";
 import "./css/taxisdetail.css";
 import UseVariables from "../Hooks/UseVariables";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import UseFonction from "../Hooks/UseFonction";
 import UseIcons from "../Hooks/UseIcons";
+import UserAuth from "../Hooks/UserAuth";
+import { toast } from "react-toastify";
 
 const TaxisDetail = ({ hide }) => {
     const [date, setDate] = useState();
     const [price, setPrice] = useState();
     const [motif, setMotif] = useState();
+    const [depenseTab, setDepenseTab] = useState();
     const [addMotifDepense, setAddMotifDepense] = useState(false);
-    const { tab } = UseVariables();
+    const { tab, carTab, drivertab } = UseVariables();
     const { Plus } = UseIcons();
     const { id } = useParams();
-    const { formatterNombre } = UseFonction();
+    const { formatterNombre, handleNewDepense } = UseFonction();
+    const { currentUser } = UserAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
         setTimeout(() => {
@@ -24,8 +29,12 @@ const TaxisDetail = ({ hide }) => {
                 bottomOfPage &&
                     bottomOfPage.scrollIntoView({ behavior: "smooth" });
             }
-        }, 1);
-    }, [addMotifDepense]);
+        }, 0);
+
+        setDepenseTab(
+            carTab?.filter((item) => item.numeroSerie === id)[0]?.motifDepense
+        );
+    }, [addMotifDepense, carTab]);
 
     const handleAddMotifDepense = () => {
         setAddMotifDepense(!addMotifDepense);
@@ -34,12 +43,37 @@ const TaxisDetail = ({ hide }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         handleAddMotifDepense();
-        const obj = {
-            date, price, motif
-        }
-
-        console.log(obj);
+        handleNewDepense(date, price, motif, currentUser.uid, id);
+        toast.success(
+            `vous venez de rajouter une depense que vous avez éffectuer pour la date du ${date}`
+        );
+        navigate("/");
     };
+
+    const handleFindDriver = (id) => {
+        return (
+            drivertab?.filter((item) => item.id === id)[0].nom + " " +
+            drivertab?.filter((item) => item.id === id)[0].prenom
+        );
+    };
+
+    const handleSort =(transactions)=>{
+        const sortedData = transactions?.sort((a, b) => {
+            const dateA = new Date(
+                a.date.year,
+                a.date.month - 1,
+                a.date.day
+            );
+            const dateB = new Date(
+                b.date.year,
+                b.date.month - 1,
+                b.date.day
+            );
+            return dateB - dateA;
+        });
+
+        return sortedData;
+    }
 
     return (
         <div
@@ -108,16 +142,16 @@ const TaxisDetail = ({ hide }) => {
                             </div>
                             <div className="personol_item_info">
                                 <span>Chauffeur : </span>
-                                <span>{item.chauffeur}</span>
+                                <span>{handleFindDriver(item.chauffeur)}</span>
                             </div>
                             <div className="personol_item_info">
-                                <span>Chauffeur : </span>
+                                <span>Statut : </span>
                                 <span
                                     style={
                                         item.statut === "garage"
                                             ? { color: "rgb(251, 18, 18)" }
                                             : item.statut === "active"
-                                            ? { color: "15.000 XAF" }
+                                            ? { color: "green" }
                                             : {}
                                     }
                                 >
@@ -147,17 +181,25 @@ const TaxisDetail = ({ hide }) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {tab[0]?.info_entreprise.taxis
-                                    .filter((item) => item.numeroSerie === id)
-                                    .map((item) =>
-                                        item.depnse?.map((value) => {
-                                            <tr key={value.id_depense}>
-                                                <td>{value.date}</td>
-                                                <td>{value.montant} XAF</td>
-                                                <td>{value.motif}</td>
-                                            </tr>;
-                                        })
-                                    )}
+                                {handleSort(depenseTab)?.map((value, index) => (
+                                    <tr key={index}>
+                                        <td>
+                                            {(String(value.date.day).length > 1
+                                                ? value.date?.day
+                                                : `0${value.date.day}`) +
+                                                "/" +
+                                                (String(value.date.month).length > 1
+                                                    ? value.date.month
+                                                    : `0${value.date.month}`) +
+                                                "/" +
+                                                value.date?.year}
+                                        </td>
+                                        <td>
+                                            {formatterNombre(value.price)} XAF
+                                        </td>
+                                        <td>{value.motif}</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                         {!addMotifDepense && (

@@ -15,15 +15,18 @@ const DriverPageDetail = ({ hide, show }) => {
     const [date, setDate] = useState();
     const scrollRef = useRef();
     const { id } = useParams();
-    const { drivertab } = UseVariables();
+    const { drivertab, carTab } = UseVariables();
     const { currentUser } = UserAuth();
     const navigate = useNavigate();
-    const { createTableRecettesDepenses, formatterNombre, addRecette } =
-        UseFonction();
+    const {
+        createTableRecettesDepenses,
+        formatterNombre,
+        addRecette,
+    } = UseFonction();
 
     useEffect(() => {
         setTableau(createTableRecettesDepenses(drivertab, id));
-    }, []);
+    }, [drivertab]);
 
     const handleAdd = () => {
         setAdd(!add);
@@ -47,27 +50,31 @@ const DriverPageDetail = ({ hide, show }) => {
                 month: Number(datTab[1]),
                 year: Number(datTab[2]),
             };
-
-            if (
-                typeof newRecette === "number" &&
-                typeof newDepense === "number" &&
-                typeof newData === "object"
-            ) {
-                handleAdd();
-                addRecette(
-                    newData,
-                    newRecette,
-                    newDepense,
-                    currentUser.uid,
-                    id
-                );
-                toast.success("vous venez de rajouter une recette");
-                navigate('/')
-            } else
-                toast.error(
-                    "la recette et les dépenses doivent etre des nombres allant de 0 à l'infini"
-                );
-        } else toast.error("Tous les champs doivent être remplis");
+            const findCar = carTab.filter((item) => item.chauffeur === id);
+            if (findCar?.length > 0) {
+                if (
+                    typeof newRecette === "number" &&
+                    typeof newDepense === "number" &&
+                    typeof newData === "object"
+                ) {
+                    handleAdd();
+                    addRecette(
+                        newData,
+                        newRecette,
+                        newDepense,
+                        motifDepense,
+                        currentUser.uid,
+                        id,
+                        findCar[0].numeroSerie
+                    );
+                    toast.success("vous venez de rajouter une recette");
+                    navigate("/");
+                } else
+                    toast.error(
+                        "la recette et les dépenses doivent etre des nombres allant de 0 à l'infini"
+                    );
+            } else toast.error("Aucun véhicule n'a été attribué à ce chauffeur")
+        } else toast.error("Tous les champs doivent être remplis");  
     };
 
     return (
@@ -166,12 +173,27 @@ const DriverPageDetail = ({ hide, show }) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {createTableRecettesDepenses(drivertab, id)?.map((item, index) => (
+                                        {createTableRecettesDepenses(
+                                            drivertab,
+                                            id
+                                        )?.map((item, index) => (
                                             <tr key={index}>
                                                 <td>
-                                                    {`${(String(item.date?.day).length <=1) ? `0${item.date?.day}` : item.date?.day }`+
+                                                    {`${
+                                                        String(item.date?.day)
+                                                            .length <= 1
+                                                            ? `0${item.date?.day}`
+                                                            : item.date?.day
+                                                    }` +
                                                         "/" +
-                                                        `${(String(item.date?.month).length <=1) ? `0${item.date?.month}` : item.date?.month }` +
+                                                        `${
+                                                            String(
+                                                                item.date?.month
+                                                            ).length <= 1
+                                                                ? `0${item.date?.month}`
+                                                                : item.date
+                                                                      ?.month
+                                                        }` +
                                                         "/" +
                                                         item.date?.year}
                                                 </td>

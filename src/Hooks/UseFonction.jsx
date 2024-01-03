@@ -2,10 +2,10 @@ import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 import { firestore } from "../Firebase.config";
 import { toast } from "react-toastify";
 import UseVariables from "./UseVariables";
-import { v4 } from 'uuid';
+import { v4 } from "uuid";
 
 const UseFonction = () => {
-    const driverId = v4()
+    const driverId = v4();
     const { carTab } = UseVariables();
 
     //ecrire le nombre sous forme de 1.000.000
@@ -248,16 +248,17 @@ const UseFonction = () => {
     };
 
     //ajouter une date pour ajouter les recettes du chauffeur
-    const addRecette = async (date, recette, depense, id, idDriver) => {
+    const addRecette = async (date, recette, depense, motif, id, idDriver, id_car) => {
         if (date && recette && depense >= 0) {
             const documentSnapshot = await getDocs(
                 collection(firestore, "utilisateur")
             );
 
             try {
-                // console.log(documentSnapshot);
                 if (documentSnapshot) {
                     const tab = [];
+                    const newDepense = [];
+                    const newCarTab = [];
                     documentSnapshot.forEach((doc) => {
                         tab.push({ ...doc.data() });
                     });
@@ -290,13 +291,31 @@ const UseFonction = () => {
                             });
                         }
                     });
+
+                    carTab
+                        ?.filter((item) => item.numeroSerie === id_car)[0]
+                        ?.motifDepense?.forEach((item) => {
+                            newDepense.push(item);
+                        });
+        
+
+                    carTab.forEach((item) => {
+                        if (item.numeroSerie === id_car) {
+                            newDepense.push({date, price: depense, motif });
+                            newCarTab.push({ ...item, motifDepense: [...newDepense] });
+                        } else {
+                            newCarTab.push(item);
+                        }
+                    });
                     updateDoc(doc(firestore, "utilisateur", id), {
                         info_entreprise: {
-                            taxis: data[0].info_entreprise.taxis,
+                            taxis: newCarTab,
                             chauffeur: newDriver,
                         },
                     });
-                }
+                } 
+
+                
             } catch (error) {
                 toast.error("une erreur s'est produite");
             }
@@ -338,8 +357,6 @@ const UseFonction = () => {
 
             const data = tab.filter((item) => item.id === id);
 
-            console.log(data[0]);
-
             carTab.forEach((item) => {
                 newCar.push(item);
             });
@@ -360,6 +377,7 @@ const UseFonction = () => {
                 assurance_date,
                 chauffeur,
                 statut,
+                motifDepense: [],
             });
 
             updateDoc(doc(firestore, "utilisateur", id), {
@@ -368,6 +386,54 @@ const UseFonction = () => {
                     chauffeur: data[0].info_entreprise.chauffeur,
                 },
             });
+        }
+    };
+
+    //ajouter une dépense
+    const handleNewDepense = async (date, price, motif, id, id_car) => {
+        const documentSnapshot = await getDocs(
+            collection(firestore, "utilisateur")
+        );
+        if (documentSnapshot && date && price && motif) {
+            const tab = [];
+            const newDepense = [];
+            const newCarTab = [];
+
+            documentSnapshot.forEach((item) => {
+                tab.push({ ...item.data() });
+            });
+
+            const data = tab.filter((item) => item.id === id);
+
+            carTab
+                ?.filter((item) => item.numeroSerie === id_car)[0]
+                ?.motifDepense?.forEach((item) => {
+                    newDepense.push(item);
+                });
+
+            const datTab = date.replace(/-/g, " ").split(" ").reverse();
+            const newData = {
+                day: Number(datTab[0]),
+                month: Number(datTab[1]),
+                year: Number(datTab[2]),
+            };
+            // console.log(newData);
+            carTab.forEach((item) => {
+                if (item.numeroSerie === id_car) {
+                    newDepense.push({date: newData, price, motif });
+                    newCarTab.push({ ...item, motifDepense: [...newDepense] });
+                } else {
+                    newCarTab.push(item);
+                }
+            });
+
+            updateDoc(doc(firestore, "utilisateur", id), {
+                info_entreprise: {
+                    taxis: newCarTab,
+                    chauffeur: data[0].info_entreprise.chauffeur,
+                },
+            });
+
         }
     };
 
@@ -381,6 +447,7 @@ const UseFonction = () => {
         addEmployee,
         addRecette,
         AddNewCar,
+        handleNewDepense,
     };
 };
 

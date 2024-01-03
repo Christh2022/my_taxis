@@ -274,7 +274,7 @@ const AddTaxis = ({ hide }) => {
                                 Aucun Chauffeur
                             </option>
                             {tab[0]?.info_entreprise.chauffeur?.filter((value) => value.statut !== 'actif')?.map((item) => (
-                                <option value={item.nom} key={item.id}>
+                                <option value={item.id} key={item.id}>
                                     {senName(item.nom , item.prenom)}
                                 </option>
                             ))}
