@@ -36,7 +36,7 @@ const TaxisDetail = ({ hide }) => {
         );
 
         
-    }, [addMotifDepense, carTab]);
+    }, [addMotifDepense, carTab, id]);
 
     const handleAddMotifDepense = () => {
         setAddMotifDepense(!addMotifDepense);

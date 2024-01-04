@@ -111,7 +111,7 @@ const UseVariables = () => {
             }
             setConducteur(tab[0]?.info_entreprise.chauffeur?.length || 0);
         }
-    }, [data, currentUser?.uid, depense, recette, benefice]);
+    }, [data, currentUser?.uid, depense, recette, benefice, tab, newDate, carTab]);
     return {
         hide,
         setHide,
