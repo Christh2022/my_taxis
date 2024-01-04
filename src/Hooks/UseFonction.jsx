@@ -6,7 +6,7 @@ import { v4 } from "uuid";
 
 const UseFonction = () => {
     const driverId = v4();
-    const { carTab } = UseVariables();
+    const { carTab, drivertab } = UseVariables();
 
     //ecrire le nombre sous forme de 1.000.000
     const formatterNombre = (n) => {
@@ -248,7 +248,15 @@ const UseFonction = () => {
     };
 
     //ajouter une date pour ajouter les recettes du chauffeur
-    const addRecette = async (date, recette, depense, motif, id, idDriver, id_car) => {
+    const addRecette = async (
+        date,
+        recette,
+        depense,
+        motif,
+        id,
+        idDriver,
+        id_car
+    ) => {
         if (date && recette && depense >= 0) {
             const documentSnapshot = await getDocs(
                 collection(firestore, "utilisateur")
@@ -297,12 +305,14 @@ const UseFonction = () => {
                         ?.motifDepense?.forEach((item) => {
                             newDepense.push(item);
                         });
-        
 
                     carTab.forEach((item) => {
                         if (item.numeroSerie === id_car) {
-                            newDepense.push({date, price: depense, motif });
-                            newCarTab.push({ ...item, motifDepense: [...newDepense] });
+                            newDepense.push({ date, price: depense, motif });
+                            newCarTab.push({
+                                ...item,
+                                motifDepense: [...newDepense],
+                            });
                         } else {
                             newCarTab.push(item);
                         }
@@ -313,9 +323,7 @@ const UseFonction = () => {
                             chauffeur: newDriver,
                         },
                     });
-                } 
-
-                
+                }
             } catch (error) {
                 toast.error("une erreur s'est produite");
             }
@@ -355,8 +363,6 @@ const UseFonction = () => {
                 tab.push({ ...item.data() });
             });
 
-            const data = tab.filter((item) => item.id === id);
-
             carTab.forEach((item) => {
                 newCar.push(item);
             });
@@ -379,11 +385,32 @@ const UseFonction = () => {
                 statut,
                 motifDepense: [],
             });
+            const newTab = [];
+            if (
+                newCar.filter((item) => item.chauffeur === chauffeur)[0]
+                    ?.chauffeur === chauffeur &&
+                drivertab.filter((val) => val.id === chauffeur)[0]?.statut ===
+                    "inactif"
+            ) {
+                drivertab?.forEach((value) => {
+                    if (value.id === chauffeur) {
+                        newTab.push({ ...value, statut: "actif" });
+                    } else {
+                        newTab.push({ ...value });
+                    }
+                });
+                console.log("good");
+                console.log(newTab, newCar);
+            } else {
+                drivertab?.forEach((value) => {
+                    newTab.push({ ...value });
+                });
 
+            }
             updateDoc(doc(firestore, "utilisateur", id), {
                 info_entreprise: {
                     taxis: newCar,
-                    chauffeur: data[0].info_entreprise.chauffeur,
+                    chauffeur: newTab,
                 },
             });
         }
@@ -420,7 +447,7 @@ const UseFonction = () => {
             // console.log(newData);
             carTab.forEach((item) => {
                 if (item.numeroSerie === id_car) {
-                    newDepense.push({date: newData, price, motif });
+                    newDepense.push({ date: newData, price, motif });
                     newCarTab.push({ ...item, motifDepense: [...newDepense] });
                 } else {
                     newCarTab.push(item);
@@ -433,7 +460,6 @@ const UseFonction = () => {
                     chauffeur: data[0].info_entreprise.chauffeur,
                 },
             });
-
         }
     };
 

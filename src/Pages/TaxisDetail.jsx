@@ -34,6 +34,8 @@ const TaxisDetail = ({ hide }) => {
         setDepenseTab(
             carTab?.filter((item) => item.numeroSerie === id)[0]?.motifDepense
         );
+
+        
     }, [addMotifDepense, carTab]);
 
     const handleAddMotifDepense = () => {

@@ -6,6 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import UseVariables from "../Hooks/UseVariables";
 import UseFonction from "../Hooks/UseFonction";
 import UserAuth from "../Hooks/UserAuth";
+import { doc, updateDoc } from "firebase/firestore";
+import { firestore } from "../Firebase.config";
 const DriverPageDetail = ({ hide, show }) => {
     const [tableau, setTableau] = useState([]);
     const [add, setAdd] = useState(false);
@@ -15,17 +17,36 @@ const DriverPageDetail = ({ hide, show }) => {
     const [date, setDate] = useState();
     const scrollRef = useRef();
     const { id } = useParams();
-    const { drivertab, carTab } = UseVariables();
+    const { drivertab, carTab} = UseVariables();
     const { currentUser } = UserAuth();
     const navigate = useNavigate();
-    const {
-        createTableRecettesDepenses,
-        formatterNombre,
-        addRecette,
-    } = UseFonction();
+    const { createTableRecettesDepenses, formatterNombre, addRecette } =
+        UseFonction();
 
     useEffect(() => {
         setTableau(createTableRecettesDepenses(drivertab, id));
+        if (carTab) {
+            const newTab = [];
+            if (
+                carTab.filter((item) => item.chauffeur === id)[0]?.chauffeur !==
+                    id &&
+                drivertab.filter((val) => val.id === id)[0]?.statut === "actif"
+            ) {
+                drivertab?.forEach((value) => {
+                    if (value.id !== id) {
+                        newTab.push({ ...value });
+                    } else {
+                        newTab.push({ ...value, statut: "inactif" });
+                    }
+                });
+                updateDoc(doc(firestore, "utilisateur", currentUser.uid), {
+                    info_entreprise: {
+                        taxis: carTab,
+                        chauffeur: newTab,
+                    },
+                });
+            }
+        }
     }, [drivertab]);
 
     const handleAdd = () => {
@@ -73,8 +94,9 @@ const DriverPageDetail = ({ hide, show }) => {
                     toast.error(
                         "la recette et les dépenses doivent etre des nombres allant de 0 à l'infini"
                     );
-            } else toast.error("Aucun véhicule n'a été attribué à ce chauffeur")
-        } else toast.error("Tous les champs doivent être remplis");  
+            } else
+                toast.error("Aucun véhicule n'a été attribué à ce chauffeur");
+        } else toast.error("Tous les champs doivent être remplis");
     };
 
     return (

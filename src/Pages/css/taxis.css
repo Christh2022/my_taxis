@@ -45,7 +45,6 @@
 .taxis_list {
     width: auto;
     display: grid;
-    grid-template-rows: repeat(2, 1fr);
     grid-template-columns: repeat(4, 1fr);
     gap: 8px;
     padding: 2rem 0;

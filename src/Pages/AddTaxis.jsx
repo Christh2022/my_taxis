@@ -31,21 +31,7 @@ const AddTaxis = ({ hide }) => {
         e.preventDefault();
 
         if (
-            marque &&
-            modele &&
-            type &&
-            madeYear &&
-            numeroSerie &&
-            places &&
-            carburant &&
-            kilometrage &&
-            n_matricule &&
-            date_inspection &&
-            achat_date &&
-            prix_achat &&
-            assurance_date &&
-            chauffeur &&
-            statut
+            marque 
         ) {
             AddNewCar(
                 marque,

@@ -83,7 +83,7 @@ const UseVariables = () => {
 
             const Cardepense = [];
             carTab?.forEach((element) => {
-                element.motifDepense.forEach((item) => {
+                element.motifDepense?.forEach((item) => {
                     Cardepense.push(item);
                 });
             });
