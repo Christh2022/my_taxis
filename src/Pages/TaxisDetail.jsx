@@ -16,11 +16,13 @@ const TaxisDetail = ({ hide }) => {
     const [depenseTab, setDepenseTab] = useState();
     const [addMotifDepense, setAddMotifDepense] = useState(false);
     const { tab, carTab, drivertab } = UseVariables();
-    const { Plus } = UseIcons();
+    const { Plus, Pencil } = UseIcons();
     const { id } = useParams();
-    const { formatterNombre, handleNewDepense } = UseFonction();
+    const { formatterNombre, handleNewDepense, driverAddTaxi } = UseFonction();
     const { currentUser } = UserAuth();
     const navigate = useNavigate();
+    const [change, setChange] = useState(false);
+    const [newChauffeur, setChauffeur] = useState();
 
     useEffect(() => {
         setTimeout(() => {
@@ -34,8 +36,6 @@ const TaxisDetail = ({ hide }) => {
         setDepenseTab(
             carTab?.filter((item) => item.numeroSerie === id)[0]?.motifDepense
         );
-
-        
     }, [addMotifDepense, carTab, id]);
 
     const handleAddMotifDepense = () => {
@@ -54,28 +54,37 @@ const TaxisDetail = ({ hide }) => {
 
     const handleFindDriver = (id) => {
         return (
-            drivertab?.filter((item) => item.id === id)[0].nom + " " +
-            drivertab?.filter((item) => item.id === id)[0].prenom
+            drivertab?.filter((item) => item.id === id)[0]?.nom +
+            " " +
+            drivertab?.filter((item) => item.id === id)[0]?.prenom
         );
     };
 
-    const handleSort =(transactions)=>{
+    const handleSort = (transactions) => {
         const sortedData = transactions?.sort((a, b) => {
-            const dateA = new Date(
-                a.date.year,
-                a.date.month - 1,
-                a.date.day
-            );
-            const dateB = new Date(
-                b.date.year,
-                b.date.month - 1,
-                b.date.day
-            );
+            const dateA = new Date(a.date.year, a.date.month - 1, a.date.day);
+            const dateB = new Date(b.date.year, b.date.month - 1, b.date.day);
             return dateB - dateA;
         });
 
         return sortedData;
-    }
+    };
+
+    const changeInfo = () => {
+        setChange(true);
+    };
+
+    const handleSaveDriver = () => {
+        setChange(false);
+
+        if (newChauffeur) {
+            driverAddTaxi(newChauffeur, id, currentUser.uid);
+            // navigate("/");
+            toast.success("le véhicule est attribué à un chauffeur");
+        } else {
+            toast.warning("aucune modification n'a été éffectuée");
+        }
+    };
 
     return (
         <div
@@ -140,24 +149,150 @@ const TaxisDetail = ({ hide }) => {
                             </div>
                             <div className="personol_item_info">
                                 <span>Date de Fin de l&#39;assurance : </span>
-                                <span>{item.assurance_date}</span>
+                                <span
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "1rem",
+                                    }}
+                                >
+                                    <span style={{ fontWeight: "100" }}>
+                                        {item.assurance_date}
+                                    </span>
+                                    <span
+                                        style={{
+                                            color: "#fad02c",
+                                            cursor: "pointer",
+                                        }}
+                                    >
+                                        {" "}
+                                        {!change ? (
+                                            <Pencil onClick={changeInfo} />
+                                        ) : (
+                                            <button onClick={handleSaveDriver}>
+                                                Enregistrez
+                                            </button>
+                                        )}
+                                    </span>
+                                </span>
                             </div>
                             <div className="personol_item_info">
                                 <span>Chauffeur : </span>
-                                <span>{handleFindDriver(item.chauffeur)}</span>
+                                <span
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "1rem",
+                                    }}
+                                >
+                                    {!change ? (
+                                        <span style={{ fontWeight: "100" }}>
+                                            {item.chauffeur !==
+                                            "aucun chauffeur disponible"
+                                                ? handleFindDriver(
+                                                      item.chauffeur
+                                                  )
+                                                : "Aucun Chauffeur Disponible"}
+                                        </span>
+                                    ) : (
+                                        <select
+                                            onChange={(e) =>
+                                                setChauffeur(e.target.value)
+                                            }
+                                            className="chauffeurChange"
+                                        >
+                                            {drivertab?.filter(
+                                                (item) =>
+                                                    item.statut === "inactif"
+                                            )?.length > 0 ? (
+                                                <>
+                                                    <option value="">
+                                                        veuillez choisir un
+                                                        chauffeur
+                                                    </option>
+                                                    {drivertab
+                                                        ?.filter(
+                                                            (item) =>
+                                                                item.statut ===
+                                                                "inactif"
+                                                        )
+                                                        .map((val) => (
+                                                            <option
+                                                                key={val.id}
+                                                                value={val.id}
+                                                            >
+                                                                {handleFindDriver(
+                                                                    val.id
+                                                                )}
+                                                            </option>
+                                                        ))}{" "}
+                                                </>
+                                            ) : (
+                                                <option value="aucun chauffeur disponible">
+                                                    {" "}
+                                                    Aucun Chauffeur Disponible
+                                                </option>
+                                            )}
+                                        </select>
+                                    )}
+                                    <span
+                                        style={{
+                                            color: "#fad02c",
+                                            cursor: "pointer",
+                                        }}
+                                    >
+                                        {" "}
+                                        {!change ? (
+                                            <Pencil onClick={changeInfo} />
+                                        ) : (
+                                            <button onClick={handleSaveDriver}>
+                                                Enregistrez
+                                            </button>
+                                        )}
+                                    </span>
+                                </span>
                             </div>
                             <div className="personol_item_info">
                                 <span>Statut : </span>
                                 <span
-                                    style={
-                                        item.statut === "garage"
-                                            ? { color: "rgb(251, 18, 18)" }
-                                            : item.statut === "active"
-                                            ? { color: "green" }
-                                            : {}
-                                    }
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "1rem",
+                                    }}
                                 >
-                                    {item.statut}
+                                    <span
+                                        style={
+                                            item.statut === "garage"
+                                                ? {
+                                                      fontWeight: "100",
+                                                      color: "rgb(251, 18, 18)",
+                                                  }
+                                                : item.statut === "active"
+                                                ? {
+                                                      fontWeight: "100",
+                                                      color: "green",
+                                                  }
+                                                : { fontWeight: "100" }
+                                        }
+                                    >
+                                        {item.statut}
+                                    </span>
+                                    <span
+                                        style={{
+                                            color: "#fad02c",
+                                            cursor: "pointer",
+                                        }}
+                                    >
+                                        {" "}
+                                        {!change ? (
+                                            <Pencil onClick={changeInfo} />
+                                        ) : (
+                                            <button onClick={handleSaveDriver}>
+                                                Enregistrez
+                                            </button>
+                                        )}
+                                    </span>
                                 </span>
                             </div>
                         </div>
@@ -190,7 +325,8 @@ const TaxisDetail = ({ hide }) => {
                                                 ? value.date?.day
                                                 : `0${value.date.day}`) +
                                                 "/" +
-                                                (String(value.date.month).length > 1
+                                                (String(value.date.month)
+                                                    .length > 1
                                                     ? value.date.month
                                                     : `0${value.date.month}`) +
                                                 "/" +

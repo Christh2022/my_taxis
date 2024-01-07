@@ -5,24 +5,25 @@ import { useNavigate } from "react-router-dom";
 import UseIcons from "../../Hooks/UseIcons";
 import PropTypes from "prop-types";
 import UseVariables from "../../Hooks/UseVariables";
+import UseFonction from "../../Hooks/UseFonction";
+import UserAuth from "../../Hooks/UserAuth";
 
 const Driver = ({ handleAddDriver }) => {
     const { Search, Plus, Pencil, Eye, Delete } = UseIcons();
     const [resize, setResize] = useState(true);
     const navigate = useNavigate();
-    const {drivertab, tab} = UseVariables();
+    const { drivertab } = UseVariables();
+    const { currentUser } = UserAuth();
+    const { handleDeleteDriver } = UseFonction();
     const HandleNavigate = (link) => {
         navigate(link);
     };
 
     useEffect(() => {
-        drivertab && console.log(tab);
         if (window.innerWidth < 760) {
             setResize(false);
         } else setResize(true);
-    });
-
-
+    }, [resize]);
 
     return (
         <div className="driver_content_start">
@@ -82,7 +83,14 @@ const Driver = ({ handleAddDriver }) => {
                                         >
                                             <Eye />
                                         </span>
-                                        <span>
+                                        <span
+                                            onClick={() =>
+                                                handleDeleteDriver(
+                                                    currentUser.uid,
+                                                    item.id, item.nom
+                                                )
+                                            }
+                                        >
                                             <Delete />
                                         </span>
                                     </div>

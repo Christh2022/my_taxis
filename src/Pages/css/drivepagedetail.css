@@ -146,6 +146,18 @@
     cursor: pointer;
 }
 
+.chauffeurChange{
+    padding: .3rem 0.5rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    background: #555;
+}
+
+.chauffeurChange option{
+    padding: .3rem 0;
+}
+
 @media (max-width: 960px) {
     .drivepageDetail {
         left: 110px;

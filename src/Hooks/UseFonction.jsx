@@ -405,7 +405,6 @@ const UseFonction = () => {
                 drivertab?.forEach((value) => {
                     newTab.push({ ...value });
                 });
-
             }
             updateDoc(doc(firestore, "utilisateur", id), {
                 info_entreprise: {
@@ -463,6 +462,73 @@ const UseFonction = () => {
         }
     };
 
+    //supprimer un chauffeur
+    const handleDeleteDriver = async (id, idDriver, nom) => {
+        const newDriverTab = [];
+        const neWCarTab = [];
+
+        drivertab.forEach((item) => {
+            if (item.id !== idDriver) {
+                newDriverTab.push({ ...item });
+            }
+        });
+
+        if (newDriverTab.filter((item) => item.id === idDriver)?.length >= 1) {
+            toast.error("une erreur s'est produit");
+        } else {
+            carTab.forEach((item) => {
+                if (
+                    newDriverTab.filter((val) => val.id === item.chauffeur)
+                        ?.length >= 1
+                ) {
+                    neWCarTab.push(item);
+                } else {
+                    neWCarTab.push({
+                        ...item,
+                        chauffeur: "aucun chauffeur disponible",
+                    });
+                }
+            });
+            await updateDoc(doc(firestore, "utilisateur", id), {
+                info_entreprise: {
+                    chauffeur: newDriverTab,
+                    taxis: neWCarTab,
+                },
+            });
+            toast.success(
+                `vous venez de supprimer le chauffeur ${nom} donc une voiture n'a plus de conducteur`
+            );
+        }
+    };
+
+    //attribuer un chauffeur à une voiture
+    const driverAddTaxi = async (idDriver, idCar, id) => {
+        const newCarTab = [];
+        const newDriverTab = [];
+
+        carTab.forEach((val) => {
+            if (val.numeroSerie === idCar) {
+                newCarTab.push({ ...val, chauffeur: idDriver });
+                drivertab?.forEach((value) => {
+                    if (value.id !== idDriver) {
+                        newDriverTab.push({ ...value });
+                    } else {
+                        newDriverTab.push({ ...value, statut: "actif" });
+                    }
+                });
+            } else {
+                newCarTab.push({ ...val });
+            }
+        });
+
+        await updateDoc(doc(firestore, "utilisateur", id), {
+            info_entreprise: {
+                taxis: newCarTab,
+                chauffeur: newDriverTab,
+            },
+        });
+    };
+
     return {
         formatterNombre,
         handleDay,
@@ -474,6 +540,8 @@ const UseFonction = () => {
         addRecette,
         AddNewCar,
         handleNewDepense,
+        handleDeleteDriver,
+        driverAddTaxi,
     };
 };
 

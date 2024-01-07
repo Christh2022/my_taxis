@@ -47,7 +47,7 @@ const DriverPageDetail = ({ hide, show }) => {
                 });
             }
         }
-    }, [drivertab, currentUser.uid]);
+    }, [drivertab, currentUser.uid, carTab]);
 
     const handleAdd = () => {
         setAdd(!add);

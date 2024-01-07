@@ -17,9 +17,9 @@ const UseVariables = () => {
     const [conducteur, setConducteur] = useState(0);
     const [hide, setHide] = useState(false);
     const [table, setTabe] = useState([]);
-    const newDate = new Date();
-
+    
     useEffect(() => {
+        const newDate = new Date();
         const newTab = data?.filter((item) => item.id === currentUser?.uid);
         setTab(newTab);
         if (data && data.length > 0) {
@@ -111,7 +111,7 @@ const UseVariables = () => {
             }
             setConducteur(tab[0]?.info_entreprise.chauffeur?.length || 0);
         }
-    }, [data, currentUser?.uid, depense, recette, benefice, tab, newDate, carTab]);
+    }, [currentUser?.uid, data, depense, recette, carTab]);
     return {
         hide,
         setHide,
