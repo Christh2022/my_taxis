@@ -505,29 +505,84 @@ const UseFonction = () => {
     const driverAddTaxi = async (idDriver, idCar, id) => {
         const newCarTab = [];
         const newDriverTab = [];
+        const driverNewTab = [];
 
         carTab.forEach((val) => {
-            if (val.numeroSerie === idCar) {
-                newCarTab.push({ ...val, chauffeur: idDriver });
-                drivertab?.forEach((value) => {
-                    if (value.id !== idDriver) {
-                        newDriverTab.push({ ...value });
-                    } else {
-                        newDriverTab.push({ ...value, statut: "actif" });
-                    }
-                });
-            } else {
+            if (val.numeroSerie !== idCar) {
                 newCarTab.push({ ...val });
+            } else {
+                newCarTab.push({ ...val, chauffeur: idDriver });
+                if (idDriver !== "aucun chauffeur disponible") {
+                    drivertab?.forEach((value) => {
+                        if (value.id !== idDriver) {
+                            newDriverTab.push({ ...value });
+                        } else {
+                            newDriverTab.push({ ...value, statut: "actif" });
+                        }
+                    });
+
+                    toast.success("le véhicule est attribué à un chauffeur");
+                } else {
+                    drivertab?.forEach((value) => {
+                        driverNewTab.push({ ...value });
+                    });
+                    toast.warning("aucun n'a été associé à ce véhicule");
+                }
             }
+        });
+
+        newDriverTab?.forEach((item) => {
+            if (newCarTab?.find((value) => value.chauffeur === item.id)) {
+                driverNewTab.push({ ...item });
+            } else driverNewTab.push({ ...item, statut: "inactif" });
         });
 
         await updateDoc(doc(firestore, "utilisateur", id), {
             info_entreprise: {
                 taxis: newCarTab,
-                chauffeur: newDriverTab,
+                chauffeur: driverNewTab,
             },
         });
     };
+
+    //changer le statut d'un véhicule
+    const changeStatut = async(idCar, statut, id)=> {
+        const newCarTab = [];
+
+        carTab.forEach((item) => {
+            if(item.numeroSerie === idCar){
+                newCarTab.push({...item, statut})
+            } else {
+                newCarTab.push({...item})
+            }
+        })
+
+        await updateDoc(doc(firestore, "utilisateur", id), {
+            info_entreprise: {
+                taxis: newCarTab,
+                chauffeur: drivertab,
+            },
+        });
+    }
+    //changer la date de fin d'assurance
+    const changeAssuranceDate = async(idCar, date, id)=> {
+        const newCarTab = [];
+
+        carTab.forEach((item) => {
+            if(item.numeroSerie === idCar){
+                newCarTab.push({...item, assurance_date: date})
+            } else {
+                newCarTab.push({...item})
+            }
+        })
+
+        await updateDoc(doc(firestore, "utilisateur", id), {
+            info_entreprise: {
+                taxis: newCarTab,
+                chauffeur: drivertab,
+            },
+        });
+    }
 
     return {
         formatterNombre,
@@ -542,6 +597,8 @@ const UseFonction = () => {
         handleNewDepense,
         handleDeleteDriver,
         driverAddTaxi,
+        changeStatut,
+        changeAssuranceDate
     };
 };
 

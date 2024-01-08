@@ -18,11 +18,21 @@ const TaxisDetail = ({ hide }) => {
     const { tab, carTab, drivertab } = UseVariables();
     const { Plus, Pencil } = UseIcons();
     const { id } = useParams();
-    const { formatterNombre, handleNewDepense, driverAddTaxi } = UseFonction();
+    const {
+        formatterNombre,
+        handleNewDepense,
+        driverAddTaxi,
+        changeStatut,
+        changeAssuranceDate,
+    } = UseFonction();
     const { currentUser } = UserAuth();
     const navigate = useNavigate();
     const [change, setChange] = useState(false);
+    const [changeStatus, setChangeStatus] = useState(false);
+    const [changeDate, setChangeDate] = useState(false);
     const [newChauffeur, setChauffeur] = useState();
+    const [newSatus, setNewSatus] = useState();
+    const [newAs_Date, setNewAs_Dater] = useState();
 
     useEffect(() => {
         setTimeout(() => {
@@ -75,15 +85,29 @@ const TaxisDetail = ({ hide }) => {
     };
 
     const handleSaveDriver = () => {
-        setChange(false);
-
         if (newChauffeur) {
             driverAddTaxi(newChauffeur, id, currentUser.uid);
-            // navigate("/");
-            toast.success("le véhicule est attribué à un chauffeur");
         } else {
             toast.warning("aucune modification n'a été éffectuée");
         }
+        setChange(false);
+    };
+
+    const handleChangeStatus = () => {
+        setChangeStatus(false);
+
+        if (newSatus) {
+            changeStatut(id, newSatus, currentUser.uid)
+            toast.success("vous venez de modifier le statut du véhicule")
+        } else toast.warning("aucune modification n'a éffectué");
+    };
+
+    const handleChangeDate = () => {
+        setChangeDate(false);
+        if (newAs_Date) {
+            changeAssuranceDate(id, newAs_Date, currentUser.uid)
+            toast.success("vous venez de modifier la date de fin de validité de votre assurance")
+        } else toast.warning("aucune modification n'a éffectué");
     };
 
     return (
@@ -156,9 +180,19 @@ const TaxisDetail = ({ hide }) => {
                                         gap: "1rem",
                                     }}
                                 >
-                                    <span style={{ fontWeight: "100" }}>
-                                        {item.assurance_date}
-                                    </span>
+                                    {!changeDate ? (
+                                        <span style={{ fontWeight: "100" }}>
+                                            {item.assurance_date}
+                                        </span>
+                                    ) : (
+                                        <input
+                                            type="date"
+                                            onChange={(e) =>
+                                                setNewAs_Dater(e.target.value)
+                                            }
+                                            className="chauffeurChange"
+                                        />
+                                    )}
                                     <span
                                         style={{
                                             color: "#fad02c",
@@ -166,10 +200,14 @@ const TaxisDetail = ({ hide }) => {
                                         }}
                                     >
                                         {" "}
-                                        {!change ? (
-                                            <Pencil onClick={changeInfo} />
+                                        {!changeDate ? (
+                                            <Pencil
+                                                onClick={() =>
+                                                    setChangeDate(true)
+                                                }
+                                            />
                                         ) : (
-                                            <button onClick={handleSaveDriver}>
+                                            <button className="editebutton_taxis" onClick={handleChangeDate}>
                                                 Enregistrez
                                             </button>
                                         )}
@@ -201,19 +239,19 @@ const TaxisDetail = ({ hide }) => {
                                             }
                                             className="chauffeurChange"
                                         >
+                                            <option value="">
+                                                veuillez choisir un chauffeur
+                                            </option>
                                             {drivertab?.filter(
                                                 (item) =>
-                                                    item.statut === "inactif"
-                                            )?.length > 0 ? (
+                                                    item.statut.toLowerCase() ===
+                                                    "inactif"
+                                            )?.length >= 1 ? (
                                                 <>
-                                                    <option value="">
-                                                        veuillez choisir un
-                                                        chauffeur
-                                                    </option>
                                                     {drivertab
                                                         ?.filter(
                                                             (item) =>
-                                                                item.statut ===
+                                                                item.statut.toLowerCase() ===
                                                                 "inactif"
                                                         )
                                                         .map((val) => (
@@ -245,7 +283,7 @@ const TaxisDetail = ({ hide }) => {
                                         {!change ? (
                                             <Pencil onClick={changeInfo} />
                                         ) : (
-                                            <button onClick={handleSaveDriver}>
+                                            <button className="editebutton_taxis" onClick={handleSaveDriver}>
                                                 Enregistrez
                                             </button>
                                         )}
@@ -261,23 +299,46 @@ const TaxisDetail = ({ hide }) => {
                                         gap: "1rem",
                                     }}
                                 >
-                                    <span
-                                        style={
-                                            item.statut === "garage"
-                                                ? {
-                                                      fontWeight: "100",
-                                                      color: "rgb(251, 18, 18)",
-                                                  }
-                                                : item.statut === "active"
-                                                ? {
-                                                      fontWeight: "100",
-                                                      color: "green",
-                                                  }
-                                                : { fontWeight: "100" }
-                                        }
-                                    >
-                                        {item.statut}
-                                    </span>
+                                    {<span></span>}
+                                    {!changeStatus ? (
+                                        <span
+                                            style={
+                                                item.statut === "garage"
+                                                    ? {
+                                                          fontWeight: "100",
+                                                          color: "rgb(255 0 0)",
+                                                      }
+                                                    : item.statut === "active"
+                                                    ? {
+                                                          fontWeight: "100",
+                                                          color: "rgb(46, 204, 113)",
+                                                      }
+                                                    : { fontWeight: "100" }
+                                            }
+                                        >
+                                            {item.statut}
+                                        </span>
+                                    ) : (
+                                        <select
+                                            className="chauffeurChange"
+                                            onChange={(e) =>
+                                                setNewSatus(e.target.value)
+                                            }
+                                        >
+                                            <option value="">
+                                                Veuillez choisir un statut
+                                            </option>
+                                            <option value="parking">
+                                                Parking
+                                            </option>
+                                            <option value="garage">
+                                                Garage
+                                            </option>
+                                            <option value="active">
+                                                Active
+                                            </option>
+                                        </select>
+                                    )}
                                     <span
                                         style={{
                                             color: "#fad02c",
@@ -285,10 +346,17 @@ const TaxisDetail = ({ hide }) => {
                                         }}
                                     >
                                         {" "}
-                                        {!change ? (
-                                            <Pencil onClick={changeInfo} />
+                                        {!changeStatus ? (
+                                            <Pencil
+                                                onClick={() =>
+                                                    setChangeStatus(true)
+                                                }
+                                            />
                                         ) : (
-                                            <button onClick={handleSaveDriver}>
+                                            <button
+                                            className="editebutton_taxis"
+                                                onClick={handleChangeStatus}
+                                            >
                                                 Enregistrez
                                             </button>
                                         )}

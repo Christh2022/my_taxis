@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Driver from "../components/Driver/Driver";
 import "./css/driverpage.css";
 import PropTypes from "prop-types";
@@ -35,93 +35,18 @@ const DriverPage = ({ hide, show }) => {
             statut,
             currentUser.uid
         );
-        // if (
-        //     nom &&
-        //     prenom &&
-        //     age &&
-        //     tel &&
-        //     nombre_d_enfant &&
-        //     statut_marital &&
-        //     date_de_prise_de_post &&
-        //     statut
-        // ) {
-            // const newEmploye = {
-            //     id: "156aqdqsdq8dqs6dqsq6d",
-            //     nom,
-            //     prenom,
-            //     adresse,
-            //     age,
-            //     tel,
-            //     nombre_d_enfant,
-            //     statut_marital,
-            //     date_de_prise_de_post,
-            //     statut,
-            //     depense: [],
-            //     recette: [],
-            // };
 
-            // const documentSnapshot = await getDocs(
-            //     collection(firestore, "utilisateur")
-            // );
-            // try {
-            //     if (documentSnapshot) {
-            //         const list = [];
-            //         documentSnapshot.forEach((doc) => {
-            //             list.push({ ...doc.data() });
-            //         });
-            //         const data = list.filter(
-            //             (item) => item.id === currentUser.uid
-            //         );
-
-            //         const newDriver = [];
-            //         data[0].info_entreprise.chauffeur.forEach((item) => {
-            //             newDriver.push(item);
-            //         });
-
-            //         if (
-            //             data[0].info_entreprise.chauffeur.length ===
-            //             newDriver.length
-            //         ) {
-            //             newDriver.push(newEmploye);
-            //             toast.success("le chauffeur a été ajouté avec success");
-            //             // console.log(newDriver);
-            //             updateDoc(
-            //                 doc(firestore, "utilisateur", currentUser.uid),
-            //                 {
-            //                     info_entreprise: {
-            //                         taxis: [
-            //                             {
-            //                                 title: "benoit 16",
-            //                                 shortDesc: "",
-            //                                 description: "",
-            //                                 price: 1850000,
-            //                             },
-            //                             {
-            //                                 title: "benoit 16",
-            //                                 shortDesc: "",
-            //                                 description: "",
-            //                                 price: 1850000,
-            //                             },
-            //                             {
-            //                                 title: "benoit 16",
-            //                                 shortDesc: "",
-            //                                 description: "",
-            //                                 price: 2850000,
-            //                             },
-            //                         ],
-            //                         chauffeur: newDriver,
-            //                     },
-            //                 }
-            //             );
-            //         }
-            //     } else {
-            //         console.log("Le document spécifié n'existe pas.");
-            //     }
-            // } catch (e) {}
-        // } else {
-        //     console.log("error");
-        // }
+        setAdd(false)
     };
+
+
+    useEffect(() => {
+        setTimeout(() => {
+            const bottomOfPage = document.getElementById("bottomOfPage");
+            bottomOfPage && bottomOfPage.scrollIntoView({ behavior: "smooth" });
+        }, 0);
+        return () => {};
+    }, [add]);
 
     return (
         <>
@@ -213,7 +138,7 @@ const DriverPage = ({ hide, show }) => {
                                         }
                                     />
                                 </div>
-                                <button>Ajouter </button>
+                                <button id="bottomOfPage">Ajouter </button>
                             </form>
                         </div>
                     )}

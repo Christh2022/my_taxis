@@ -5,6 +5,7 @@ import DashContent from "../components/Dash_content/Dash_content";
 import DashContentTwo from "../components/Dash_content/Dash_content_two";
 
 const Dashboard = ({ hide, show }) => {
+    
     return (
         <>
             {show && (
