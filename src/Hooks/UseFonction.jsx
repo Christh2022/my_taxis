@@ -42,44 +42,28 @@ const UseFonction = () => {
     };
 
     //comparer la date de la recette et la date d'aujourd'hui
-    const handleDateRecette = (a) => {
-        const today = new Date();
-        const date = new Date(a.year, a.month - 1, a.day);
-        const diffInDays =
-            (today.getTime() - date.getTime()) / (1000 * 3600 * 24);
+    const handleDateRecette = (objetDate) => {
+        // Obtenez la date actuelle
+        let dateActuelle = new Date();
+        // Réglez l'heure actuelle à minuit
+        dateActuelle.setHours(0, 0, 0, 0); 
 
-        if (
-            (diffInDays < 1 &&
-                today.getDate() === date.getDate() &&
-                today.getMonth() === date.getMonth()) ||
-            (diffInDays < 1 &&
-                today.getDate() === 1 &&
-                today.getMonth() === 0 &&
-                date.getDate() === 31 &&
-                date.getMonth() === 11)
-        ) {
-            return "Auj";
-        } else if (
-            (diffInDays < 1 &&
-                today.getDate() - date.getDate() === 1 &&
-                today.getMonth() === date.getMonth()) ||
-            (diffInDays < 2 &&
-                today.getDate() === 1 &&
-                today.getMonth() === 0 &&
-                date.getDate() === 31 &&
-                date.getMonth() === 11)
-        ) {
-            return "Hier";
-        } else if (
-            (diffInDays < 2 &&
-                today.getDate() - date.getDate() === 2 &&
-                today.getMonth() === date.getMonth()) ||
-            (diffInDays < 3 &&
-                today.getDate() === 1 &&
-                today.getMonth() === 0 &&
-                date.getDate() === 30 &&
-                date.getMonth() === 11)
-        ) {
+        // Créez un objet date à partir des données fournies
+        let dateObjet = new Date(
+            objetDate.year,
+            objetDate.month - 1,
+            objetDate.day
+        );
+        // Réglez l'heure de l'objet date à minuit
+        dateObjet.setHours(0, 0, 0, 0); 
+
+        // Vérifiez les conditions
+        if (dateObjet.getTime() === dateActuelle.getTime()) {
+            return "auj";
+        } else if (dateObjet.getTime() === dateActuelle.getTime() - 86400000) {
+            // 86400000 millisecondes correspondent à un jour
+            return "hier";
+        } else if (dateObjet.getTime() === dateActuelle.getTime() - 86400000 * 2) {
             return "Avant-hier";
         } else {
             return "delete";
@@ -161,7 +145,18 @@ const UseFonction = () => {
                 return dateB - dateA;
             });
 
-            return sortedData;
+            const date = new Date();
+            const month = date.getMonth();
+
+            return sortedData.filter((item) => {
+                const dateA = new Date(
+                    item.date.year,
+                    item.date.month - 1,
+                    item.date.day
+                );
+
+                return dateA.getMonth() === month;
+            });
         }
     };
 
@@ -546,16 +541,16 @@ const UseFonction = () => {
     };
 
     //changer le statut d'un véhicule
-    const changeStatut = async(idCar, statut, id)=> {
+    const changeStatut = async (idCar, statut, id) => {
         const newCarTab = [];
 
         carTab.forEach((item) => {
-            if(item.numeroSerie === idCar){
-                newCarTab.push({...item, statut})
+            if (item.numeroSerie === idCar) {
+                newCarTab.push({ ...item, statut });
             } else {
-                newCarTab.push({...item})
+                newCarTab.push({ ...item });
             }
-        })
+        });
 
         await updateDoc(doc(firestore, "utilisateur", id), {
             info_entreprise: {
@@ -563,18 +558,18 @@ const UseFonction = () => {
                 chauffeur: drivertab,
             },
         });
-    }
+    };
     //changer la date de fin d'assurance
-    const changeAssuranceDate = async(idCar, date, id)=> {
+    const changeAssuranceDate = async (idCar, date, id) => {
         const newCarTab = [];
 
         carTab.forEach((item) => {
-            if(item.numeroSerie === idCar){
-                newCarTab.push({...item, assurance_date: date})
+            if (item.numeroSerie === idCar) {
+                newCarTab.push({ ...item, assurance_date: date });
             } else {
-                newCarTab.push({...item})
+                newCarTab.push({ ...item });
             }
-        })
+        });
 
         await updateDoc(doc(firestore, "utilisateur", id), {
             info_entreprise: {
@@ -582,7 +577,31 @@ const UseFonction = () => {
                 chauffeur: drivertab,
             },
         });
-    }
+    };
+
+    //salaire de l'employé
+    const busOrCoasterOrTaxiEmployee = (total_jour, id) => {
+        const driver = carTab.find((item) => item.chauffeur === id);
+        let chauffeur = 0;
+        let controleur = 0;
+
+        if (driver.type === "bus" || driver.type === "coaster") {
+            if (driver.type === "bus") {
+                const salaire = 10000;
+                chauffeur = formatterNombre(total_jour * (salaire * 0.6));
+                controleur = formatterNombre(total_jour * (salaire * 0.4));
+            } else if (driver.type === "coaster") {
+                const salaire = 15000;
+                chauffeur = formatterNombre(total_jour * (salaire * 0.6));
+                controleur = formatterNombre(total_jour * (salaire * 0.4));
+            }
+        } else if (driver.type === "taxis") {
+            const salaire = 4000;
+            chauffeur = formatterNombre(total_jour * salaire);
+        }
+
+        return { chauffeur, controleur };
+    };
 
     return {
         formatterNombre,
@@ -598,7 +617,8 @@ const UseFonction = () => {
         handleDeleteDriver,
         driverAddTaxi,
         changeStatut,
-        changeAssuranceDate
+        changeAssuranceDate,
+        busOrCoasterOrTaxiEmployee,
     };
 };
 

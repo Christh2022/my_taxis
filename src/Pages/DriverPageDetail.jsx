@@ -6,8 +6,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import UseVariables from "../Hooks/UseVariables";
 import UseFonction from "../Hooks/UseFonction";
 import UserAuth from "../Hooks/UserAuth";
-import { doc, updateDoc } from "firebase/firestore";
-import { firestore } from "../Firebase.config";
 const DriverPageDetail = ({ hide, show }) => {
     const [tableau, setTableau] = useState([]);
     const [add, setAdd] = useState(false);
@@ -17,37 +15,19 @@ const DriverPageDetail = ({ hide, show }) => {
     const [date, setDate] = useState();
     const scrollRef = useRef();
     const { id } = useParams();
-    const { drivertab, carTab} = UseVariables();
+    const { drivertab, carTab } = UseVariables();
     const { currentUser } = UserAuth();
     const navigate = useNavigate();
-    const { createTableRecettesDepenses, formatterNombre, addRecette } =
-        UseFonction();
+    const {
+        createTableRecettesDepenses,
+        formatterNombre,
+        addRecette,
+        busOrCoasterOrTaxiEmployee,
+    } = UseFonction();
 
     useEffect(() => {
         setTableau(createTableRecettesDepenses(drivertab, id));
-        if (carTab) {
-            const newTab = [];
-            if (
-                carTab.filter((item) => item.chauffeur === id)[0]?.chauffeur !==
-                    id &&
-                drivertab.filter((val) => val.id === id)[0]?.statut === "actif"
-            ) {
-                drivertab?.forEach((value) => {
-                    if (value.id !== id) {
-                        newTab.push({ ...value });
-                    } else {
-                        newTab.push({ ...value, statut: "inactif" });
-                    }
-                });
-                updateDoc(doc(firestore, "utilisateur", currentUser.uid), {
-                    info_entreprise: {
-                        taxis: carTab,
-                        chauffeur: newTab,
-                    },
-                });
-            }
-        }
-    }, [drivertab, currentUser.uid, carTab]);
+    }, [drivertab]);
 
     const handleAdd = () => {
         setAdd(!add);
@@ -344,15 +324,60 @@ const DriverPageDetail = ({ hide, show }) => {
                                     </span>
                                 </div>
 
-                                <div className="statistique_benefice">
-                                    <span>Salaire par mois : </span>
-                                    <span>
-                                        {formatterNombre(
-                                            tableau?.length * 4000
-                                        )}{" "}
-                                        XAF
-                                    </span>
-                                </div>
+                                {carTab
+                                    ?.find((item) => item.chauffeur === id)
+                                    .type.toLowerCase() !== "taxis" ? (
+                                    <div className="statistique_benefice">
+                                        <span>
+                                            <div style={{display: 'flex', gap: '1rem'}}>
+                                                <span>
+                                                    Salaire Chauffeur par mois : 
+                                                </span>
+
+                                                <span>
+                                                    {
+                                                        busOrCoasterOrTaxiEmployee(
+                                                            tableau?.length,
+                                                            id
+                                                        ).chauffeur
+                                                    }{" "}
+                                                    XAF
+                                                </span>
+                                            </div>
+
+                                            <div style={{display: 'flex', gap: '1rem'}}>
+                                                <span>
+                                                    Salaire Controleur par mois
+                                                    :
+                                                </span>
+                                                <span>
+                                                    {
+                                                        busOrCoasterOrTaxiEmployee(
+                                                            tableau?.length,
+                                                            id
+                                                        ).controleur
+                                                    }{" "}
+                                                    XAF
+                                                </span>
+                                            </div>
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <div className="statistique_benefice">
+                                        <span>
+                                            Salaire Chauffeur par mois :{" "}
+                                        </span>
+                                        <span>
+                                            {
+                                                busOrCoasterOrTaxiEmployee(
+                                                    tableau?.length,
+                                                    id
+                                                ).chauffeur
+                                            }{" "}
+                                            XAF
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                         </>
                     )}
