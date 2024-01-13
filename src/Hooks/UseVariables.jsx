@@ -28,15 +28,15 @@ const UseVariables = () => {
 
             for (
                 let i = 0;
-                i < tab[0]?.info_entreprise.chauffeur?.length;
+                i < tab[0]?.info_entreprise.taxis?.length;
                 i++
             ) {
                 newTabDepense.push(
-                    tab[0]?.info_entreprise.chauffeur[i]?.depense
+                    tab[0]?.info_entreprise.taxis[i]?.motifDepense
                 );
 
                 newTabRecette.push(
-                    tab[0]?.info_entreprise.chauffeur[i]?.recette
+                    tab[0]?.info_entreprise.taxis[i]?.recette
                 );
             }
 
@@ -77,7 +77,7 @@ const UseVariables = () => {
                     .filter(
                         (item) => item.date.month === newDate.getMonth() + 1
                     )
-                    .reduce((acc, val) => acc + val.montant, 0);
+                    .reduce((acc, val) => acc + val.price, 0);
                 setBenefice_mois(recette_mois - depense_mois);
             } else setBenefice_mois(0);
 

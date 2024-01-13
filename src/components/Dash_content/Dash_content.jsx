@@ -2,14 +2,47 @@ import UseIcons from "../../Hooks/UseIcons";
 import "./dashcontent.css";
 import UseFonction from "../../Hooks/UseFonction";
 import UseVariables from "../../Hooks/UseVariables";
+import { useEffect } from "react";
 
 const DashContent = () => {
     const { Depense, Revenu, Driver, Recette, Arrow } = UseIcons();
 
     const { formatterNombre, handleDateRecette, regrouperParDate } =
         UseFonction();
-    const { depense, recette, recetteDay, depenseGreen, benefice, conducteur } =
-        UseVariables();
+    const {
+        tab,
+        depense,
+        recette,
+        recetteDay,
+        depenseGreen,
+        benefice,
+        conducteur,
+    } = UseVariables();
+
+    useEffect(() => {
+        let newTabDepense = [];
+        let newTabRecette = [];
+
+        for (let i = 0; i < tab[0]?.info_entreprise.taxis?.length; i++) {
+            newTabDepense.push(tab[0]?.info_entreprise.taxis[i]?.motifDepense);
+
+            newTabRecette.push(tab[0]?.info_entreprise.taxis[i]?.recette);
+        }
+        console.log(
+            newTabDepense
+                .map((item) => {
+                    return { ...item };
+                })
+                ?.map((objet) => Object.values(objet))
+                .flat().reduce((acc, val)=> acc + val.price, 0),
+            newTabRecette
+                .map((item) => {
+                    return { ...item };
+                })
+                ?.map((objet) => Object.values(objet))
+                .flat().reduce((acc, val)=> acc + val.montant, 0)
+        );
+    });
 
     return (
         <div className="card_dash_stat">
@@ -81,35 +114,38 @@ const DashContent = () => {
             <div className="card_dash_stat_right">
                 <h2>Recettes par Jour </h2>
                 <div className="card_day_recette_info">
-                    {regrouperParDate(recetteDay).sort((a, b) =>{
-                        const dateA = new Date(
-                            a.date.year,
-                            a.date.month - 1,
-                            a.date.day
-                        );
-                        const dateB = new Date(
-                            b.date.year,
-                            b.date.month - 1,
-                            b.date.day
-                        );
-                        return dateB - dateA;
-                    })?.map(
-                        (item, index) =>
-                            handleDateRecette(item.date) !== "delete" && (
-                                <div
-                                    key={index}
-                                    className="card_day_recette_item"
-                                >
-                                    <p>
-                                        {handleDateRecette(item.date)} :{" "}
-                                        {formatterNombre(item.montantTotal)} XAF
-                                    </p>
-                                    <span>
-                                        <Arrow />
-                                    </span>
-                                </div>
-                            )
-                    )}
+                    {regrouperParDate(recetteDay)
+                        .sort((a, b) => {
+                            const dateA = new Date(
+                                a.date.year,
+                                a.date.month - 1,
+                                a.date.day
+                            );
+                            const dateB = new Date(
+                                b.date.year,
+                                b.date.month - 1,
+                                b.date.day
+                            );
+                            return dateB - dateA;
+                        })
+                        ?.map(
+                            (item, index) =>
+                                handleDateRecette(item.date) !== "delete" && (
+                                    <div
+                                        key={index}
+                                        className="card_day_recette_item"
+                                    >
+                                        <p>
+                                            {handleDateRecette(item.date)} :{" "}
+                                            {formatterNombre(item.montantTotal)}{" "}
+                                            XAF
+                                        </p>
+                                        <span>
+                                            <Arrow />
+                                        </span>
+                                    </div>
+                                )
+                        )}
                 </div>
             </div>
         </div>

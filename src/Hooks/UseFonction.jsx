@@ -46,7 +46,7 @@ const UseFonction = () => {
         // Obtenez la date actuelle
         let dateActuelle = new Date();
         // Réglez l'heure actuelle à minuit
-        dateActuelle.setHours(0, 0, 0, 0); 
+        dateActuelle.setHours(0, 0, 0, 0);
 
         // Créez un objet date à partir des données fournies
         let dateObjet = new Date(
@@ -55,7 +55,7 @@ const UseFonction = () => {
             objetDate.day
         );
         // Réglez l'heure de l'objet date à minuit
-        dateObjet.setHours(0, 0, 0, 0); 
+        dateObjet.setHours(0, 0, 0, 0);
 
         // Vérifiez les conditions
         if (dateObjet.getTime() === dateActuelle.getTime()) {
@@ -63,7 +63,10 @@ const UseFonction = () => {
         } else if (dateObjet.getTime() === dateActuelle.getTime() - 86400000) {
             // 86400000 millisecondes correspondent à un jour
             return "hier";
-        } else if (dateObjet.getTime() === dateActuelle.getTime() - 86400000 * 2) {
+        } else if (
+            dateObjet.getTime() ===
+            dateActuelle.getTime() - 86400000 * 2
+        ) {
             return "Avant-hier";
         } else {
             return "delete";
@@ -261,6 +264,7 @@ const UseFonction = () => {
                 if (documentSnapshot) {
                     const tab = [];
                     const newDepense = [];
+                    const newRecette = [];
                     const newCarTab = [];
                     documentSnapshot.forEach((doc) => {
                         tab.push({ ...doc.data() });
@@ -304,14 +308,22 @@ const UseFonction = () => {
                     carTab.forEach((item) => {
                         if (item.numeroSerie === id_car) {
                             newDepense.push({ date, price: depense, motif });
+                            newRecette.push({
+                                date,
+                                montant: recette,
+                                driverName: ` ${driver[0].nom} ${driver[0].prenom}`,
+                                driverId: id,
+                            });
                             newCarTab.push({
                                 ...item,
                                 motifDepense: [...newDepense],
+                                recette: [...newRecette],
                             });
                         } else {
                             newCarTab.push(item);
                         }
                     });
+
                     updateDoc(doc(firestore, "utilisateur", id), {
                         info_entreprise: {
                             taxis: newCarTab,
@@ -379,7 +391,9 @@ const UseFonction = () => {
                 chauffeur,
                 statut,
                 motifDepense: [],
+                recette: [],
             });
+
             const newTab = [];
             if (
                 newCar.filter((item) => item.chauffeur === chauffeur)[0]
@@ -459,40 +473,44 @@ const UseFonction = () => {
 
     //supprimer un chauffeur
     const handleDeleteDriver = async (id, idDriver, nom) => {
-        const newDriverTab = [];
-        const neWCarTab = [];
+        if (window.confirm("voulez-vous supprimer cet employé")) {
+            const newDriverTab = [];
+            const neWCarTab = [];
 
-        drivertab.forEach((item) => {
-            if (item.id !== idDriver) {
-                newDriverTab.push({ ...item });
-            }
-        });
-
-        if (newDriverTab.filter((item) => item.id === idDriver)?.length >= 1) {
-            toast.error("une erreur s'est produit");
-        } else {
-            carTab.forEach((item) => {
-                if (
-                    newDriverTab.filter((val) => val.id === item.chauffeur)
-                        ?.length >= 1
-                ) {
-                    neWCarTab.push(item);
-                } else {
-                    neWCarTab.push({
-                        ...item,
-                        chauffeur: "aucun chauffeur disponible",
-                    });
+            drivertab.forEach((item) => {
+                if (item.id !== idDriver) {
+                    newDriverTab.push({ ...item });
                 }
             });
-            await updateDoc(doc(firestore, "utilisateur", id), {
-                info_entreprise: {
-                    chauffeur: newDriverTab,
-                    taxis: neWCarTab,
-                },
-            });
-            toast.success(
-                `vous venez de supprimer le chauffeur ${nom} donc une voiture n'a plus de conducteur`
-            );
+
+            if (
+                newDriverTab.filter((item) => item.id === idDriver)?.length >= 1
+            ) {
+                toast.error("une erreur s'est produit");
+            } else {
+                carTab.forEach((item) => {
+                    if (
+                        newDriverTab.filter((val) => val.id === item.chauffeur)
+                            ?.length >= 1
+                    ) {
+                        neWCarTab.push(item);
+                    } else {
+                        neWCarTab.push({
+                            ...item,
+                            chauffeur: "aucun chauffeur disponible",
+                        });
+                    }
+                });
+                await updateDoc(doc(firestore, "utilisateur", id), {
+                    info_entreprise: {
+                        chauffeur: newDriverTab,
+                        taxis: neWCarTab,
+                    },
+                });
+                toast.success(
+                    `vous venez de supprimer le chauffeur ${nom} donc une voiture n'a plus de conducteur`
+                );
+            }
         }
     };
 
