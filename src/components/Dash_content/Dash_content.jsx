@@ -2,47 +2,14 @@ import UseIcons from "../../Hooks/UseIcons";
 import "./dashcontent.css";
 import UseFonction from "../../Hooks/UseFonction";
 import UseVariables from "../../Hooks/UseVariables";
-import { useEffect } from "react";
 
 const DashContent = () => {
     const { Depense, Revenu, Driver, Recette, Arrow } = UseIcons();
 
     const { formatterNombre, handleDateRecette, regrouperParDate } =
         UseFonction();
-    const {
-        tab,
-        depense,
-        recette,
-        recetteDay,
-        depenseGreen,
-        benefice,
-        conducteur,
-    } = UseVariables();
-
-    useEffect(() => {
-        let newTabDepense = [];
-        let newTabRecette = [];
-
-        for (let i = 0; i < tab[0]?.info_entreprise.taxis?.length; i++) {
-            newTabDepense.push(tab[0]?.info_entreprise.taxis[i]?.motifDepense);
-
-            newTabRecette.push(tab[0]?.info_entreprise.taxis[i]?.recette);
-        }
-        console.log(
-            newTabDepense
-                .map((item) => {
-                    return { ...item };
-                })
-                ?.map((objet) => Object.values(objet))
-                .flat().reduce((acc, val)=> acc + val.price, 0),
-            newTabRecette
-                .map((item) => {
-                    return { ...item };
-                })
-                ?.map((objet) => Object.values(objet))
-                .flat().reduce((acc, val)=> acc + val.montant, 0)
-        );
-    });
+    const { depense, recette, recetteDay, depenseGreen, benefice, conducteur } =
+        UseVariables();
 
     return (
         <div className="card_dash_stat">

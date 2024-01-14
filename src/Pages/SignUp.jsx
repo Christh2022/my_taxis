@@ -103,6 +103,7 @@ const SignUp = () => {
                         ],
                     },
                     timestamp: serverTimestamp(),
+                    photoUrl : ''
                 });
                 toast.success("Vos données sont bien enregistrées .");
             } catch (error) {
@@ -110,15 +111,6 @@ const SignUp = () => {
                 toast.error(`${error}`);
             }
 
-            //     "User submitted: ",
-            //     name,
-            //     prenom,
-            //     Age,
-            //     email,
-            //     password,
-            //     address,
-            //     tel
-            // );
         }
     };
     

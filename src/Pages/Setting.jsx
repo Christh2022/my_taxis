@@ -4,6 +4,8 @@ import UseIcons from "../Hooks/UseIcons";
 import profile from "../assets/profil.jpg";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import UseVariables from "../Hooks/UseVariables";
+import UserAuth from "../Hooks/UserAuth";
 
 const Setting = ({ hide, show }) => {
     const {
@@ -17,11 +19,15 @@ const Setting = ({ hide, show }) => {
         Security,
         Pencil,
     } = UseIcons();
+    const { tab } = UseVariables();
+    const { currentUser } = UserAuth();
     const [setting, setSetting] = useState("apropos");
     const [pwd, setPwd] = useState(false);
     const showChangePwd = () => {
         setPwd(!pwd);
     };
+
+    const admin = tab?.find((item) => item.id === currentUser.uid);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -33,14 +39,20 @@ const Setting = ({ hide, show }) => {
         <>
             {show && (
                 <div
-                    className={`setting_content ${hide && "setting_isActive"}`}
+                    className={`setting_content ${
+                        hide ? "setting_isActive" : ""
+                    }`}
                 >
                     <div className="container_setting_content">
                         <h2>Paramettre</h2>
                         <div className="box_setting_info">
                             <div className="first_box_setting">
                                 <img src={profile} alt="" />
-                                <h6>Roldi Mampassi</h6>
+                                <h6>
+                                    {admin?.nom.split(" ")[0] +
+                                        " " +
+                                        admin?.prenom.split(" ")[0]}
+                                </h6>
                                 <span>Administrateur</span>
                                 <div className="info_admin_left">
                                     <div>
@@ -49,7 +61,7 @@ const Setting = ({ hide, show }) => {
                                         </span>
                                         <span>ID :</span>
                                     </div>
-                                    <span>1134657978</span>
+                                    <span>{admin?.timestamp.nanoseconds}</span>
                                 </div>
                                 <div className="info_admin_left">
                                     <div>
@@ -58,7 +70,7 @@ const Setting = ({ hide, show }) => {
                                         </span>
                                         <span>Inscription :</span>
                                     </div>
-                                    <span>4789666445</span>
+                                    <span>{admin?.timestamp.seconds}</span>
                                 </div>
                                 <div className="info_admin_left">
                                     <div>
@@ -120,7 +132,15 @@ const Setting = ({ hide, show }) => {
                                                         </span>
                                                         <span>Nom : </span>
                                                     </div>
-                                                    <span>Roldi Mampassi</span>
+                                                    <span>
+                                                        {admin?.nom.split(
+                                                            " "
+                                                        )[0] +
+                                                            " " +
+                                                            admin?.prenom.split(
+                                                                " "
+                                                            )[0]}
+                                                    </span>
                                                 </li>
                                                 <li>
                                                     <div>
@@ -129,9 +149,7 @@ const Setting = ({ hide, show }) => {
                                                         </span>
                                                         <span>email</span>
                                                     </div>
-                                                    <span>
-                                                        roldichristh@gmail.com
-                                                    </span>
+                                                    <span>{admin?.email}</span>
                                                 </li>
                                                 <li>
                                                     <div>
@@ -142,8 +160,7 @@ const Setting = ({ hide, show }) => {
                                                     </div>
                                                     <span>
                                                         {" "}
-                                                        110 bis rue bonga,
-                                                        Ouenze
+                                                        {admin?.address}
                                                     </span>
                                                 </li>
                                                 <li>
@@ -153,9 +170,7 @@ const Setting = ({ hide, show }) => {
                                                         </span>
                                                         <span>Téléphone</span>
                                                     </div>
-                                                    <span>
-                                                        +242 06 562 7117
-                                                    </span>
+                                                    <span>{admin?.tel}</span>
                                                 </li>
                                             </ul>
                                         </div>

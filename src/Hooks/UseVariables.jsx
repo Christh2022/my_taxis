@@ -77,7 +77,7 @@ const UseVariables = () => {
                     .filter(
                         (item) => item.date.month === newDate.getMonth() + 1
                     )
-                    .reduce((acc, val) => acc + val.price, 0);
+                    .reduce((acc, val) => acc + Number(val.price), 0);
                 setBenefice_mois(recette_mois - depense_mois);
             } else setBenefice_mois(0);
 

@@ -111,7 +111,7 @@ td {
     border: none;
     background: #fad02c;
     padding: 0.3rem 0.5rem;
-    font-size: calc(1.1rem - .8vw);
+    font-size: calc(1.1rem - .3vw);
     border-radius: .3rem;
     color: #222;
     cursor: pointer;

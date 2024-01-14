@@ -74,11 +74,12 @@ const UseFonction = () => {
     };
 
     //Gérer les pourcentages des bénéfices du mois
-    const handleBenefPercent = (a) => {
+    const handleBenefPercent = () => {
         let percent = 0;
+        let benefit = [];
 
         const date = new Date();
-        // Mois en JavaScript est indexé de 0 à 11, donc vous devrez ajouter 1 au mois
+        // Mois en JavaScript est indexé de 0 à 11, donc  il faut ajouter 1 au mois
         // Crée un nouvel objet Date avec l'année et le mois spécifiés et le jour 0 pour obtenir le dernier jour du mois
         // En utilisant getDate(), récupère le nombre de jours dans le mois
         const DayNbrperMonth = new Date(
@@ -86,9 +87,59 @@ const UseFonction = () => {
             date.getMonth() + 1,
             0
         ).getDate();
-        percent = (a / (15000 * DayNbrperMonth)).toFixed(2);
+
+        carTab?.forEach((item) => {
+            let a =
+                item.recette
+                    .filter((item) => item.date.month === date.getMonth() + 1)
+                    .reduce((acc, val) => acc + val.montant, 0) -
+                item.motifDepense
+                    .filter((item) => item.date.month === date.getMonth() + 1)
+                    .reduce((acc, val) => acc + Number(val.price), 0);
+
+                    
+            if (item.type.toLowerCase() === "coaster")
+                benefit.push(a / (50000 * DayNbrperMonth));
+            if (item.type.toLowerCase() === "bus")
+                benefit.push(a / (35000 * DayNbrperMonth));
+            if (item.type.toLowerCase() === "taxis")
+                benefit.push(a / (15000 * DayNbrperMonth));
+        });
+
+        percent = benefit.reduce((acc, val) => acc + val, 0).toFixed(3);
 
         return percent;
+    };
+
+    //Gérer les pourcentages des bénéfices du mois
+    const handleBenefPercentEmployee = (id) => {
+        const anneeEnCours = new Date().getFullYear();
+        // La date du 1er janvier de l'année suivante moins un jour
+        const dateFinAnnee = new Date(anneeEnCours + 1, 0, 0);
+        // La date du 1er janvier de l'année actuelle
+        var dateDebutAnnee = new Date(anneeEnCours, 0, 1);
+
+        // Calcul de la différence en millisecondes
+        var difference = dateFinAnnee - dateDebutAnnee;
+
+        // Conversion de la différence en jours
+        var nombreDeJours = difference / (1000 * 60 * 60 * 24);
+
+        const driver = drivertab.find((item) => item.id === id);
+        if (driver) {
+            let percent = 0;
+            let benefit = [];
+
+            benefit.push(
+                (driver.recette.reduce((acc, val) => acc + val.montant, 0) -
+                    driver.depense.reduce((acc, val) => acc + val.montant, 0)) /
+                    (15000 * nombreDeJours + 1)
+            );
+
+            percent = benefit.reduce((acc, val) => acc + val, 0).toFixed(2);
+
+            return percent;
+        }
     };
 
     //vous avez fourni et renvoie un tableau contenant les sommes des montants pour chaque date.
@@ -303,6 +354,12 @@ const UseFonction = () => {
                         ?.filter((item) => item.numeroSerie === id_car)[0]
                         ?.motifDepense?.forEach((item) => {
                             newDepense.push(item);
+                        });
+
+                    carTab
+                        ?.filter((item) => item.numeroSerie === id_car)[0]
+                        ?.recette?.forEach((item) => {
+                            newRecette.push(item);
                         });
 
                     carTab.forEach((item) => {
@@ -637,6 +694,7 @@ const UseFonction = () => {
         changeStatut,
         changeAssuranceDate,
         busOrCoasterOrTaxiEmployee,
+        handleBenefPercentEmployee,
     };
 };
 

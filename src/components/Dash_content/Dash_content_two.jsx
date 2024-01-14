@@ -4,16 +4,16 @@ import logo from "../../assets/profil.jpg";
 import { useNavigate } from "react-router-dom";
 import UseVariables from "../../Hooks/UseVariables";
 import UseFonction from "../../Hooks/UseFonction";
+import { useEffect } from "react";
 
 const DashContentTwo = () => {
     const { Benefit, Chart } = UseIcons();
     const navigate = useNavigate();
-    const { formatterNombre, handleBenefPercent } = UseFonction();
+    const { formatterNombre, handleBenefPercent, handleBenefPercentEmployee } =
+        UseFonction();
     const { benefice_mois, drivertab } = UseVariables();
 
-    // useEffect(() => {
-    //         console.log(benefice_mois);
-    // });
+    
 
     return (
         <div className="Dash_content_two">
@@ -27,22 +27,37 @@ const DashContentTwo = () => {
                     <h5>Bénéfices du mois</h5>
                     <h3
                         style={
-                            benefice_mois !== 0
+                            benefice_mois > 0
                                 ? { color: "#2ECC71" }
                                 : benefice_mois === 0
                                 ? { color: "#fff" }
                                 : { color: "#FB1212" }
                         }
                     >
-                        {benefice_mois !== 0
+                        {benefice_mois > 0
                             ? ` ${formatterNombre(benefice_mois)}`
                             : benefice_mois === 0
                             ? formatterNombre(benefice_mois)
-                            : `- ${formatterNombre(benefice_mois)}`}{" "}
+                            : `- ${formatterNombre(
+                                  Math.abs(benefice_mois)
+                              )}`}{" "}
                         XAF
                     </h3>
                     <span>
-                        <span>{handleBenefPercent(benefice_mois)}%</span>
+                        <span
+                            style={
+                                handleBenefPercent() < 0
+                                    ? { background: "#FB1212", color: "#fff" }
+                                    : {}
+                            }
+                        >
+                            {handleBenefPercent() > 0
+                                ? handleBenefPercent()
+                                : Math.abs(handleBenefPercent()) === 0
+                                ? handleBenefPercent()
+                                : `- ${Math.abs(handleBenefPercent())}`}
+                            %
+                        </span>
                     </span>
                     <span>
                         <Chart />
@@ -64,18 +79,7 @@ const DashContentTwo = () => {
                             </div>
                             <div className="info_recette_dash">
                                 <span>
-                                    +
-                                    {handleBenefPercent(
-                                        item.recette.reduce(
-                                            (acc, val) => acc + val.montant,
-                                            0
-                                        ) -
-                                            item.depense.reduce(
-                                                (acc, val) => acc + val.montant,
-                                                0
-                                            )
-                                    )}
-                                    %
+                                    +{handleBenefPercentEmployee(item.id)}%
                                 </span>
                             </div>
                         </li>
