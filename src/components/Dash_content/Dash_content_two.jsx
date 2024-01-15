@@ -4,7 +4,6 @@ import logo from "../../assets/profil.jpg";
 import { useNavigate } from "react-router-dom";
 import UseVariables from "../../Hooks/UseVariables";
 import UseFonction from "../../Hooks/UseFonction";
-import { useEffect } from "react";
 import UserAuth from "../../Hooks/UserAuth";
 
 const DashContentTwo = () => {
