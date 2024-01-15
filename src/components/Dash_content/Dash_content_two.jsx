@@ -5,15 +5,18 @@ import { useNavigate } from "react-router-dom";
 import UseVariables from "../../Hooks/UseVariables";
 import UseFonction from "../../Hooks/UseFonction";
 import { useEffect } from "react";
+import UserAuth from "../../Hooks/UserAuth";
 
 const DashContentTwo = () => {
     const { Benefit, Chart } = UseIcons();
     const navigate = useNavigate();
     const { formatterNombre, handleBenefPercent, handleBenefPercentEmployee } =
         UseFonction();
-    const { benefice_mois, drivertab } = UseVariables();
+    const {tab, benefice_mois, drivertab } = UseVariables();
 
-    
+    const { currentUser } = UserAuth();
+
+    const admin = tab?.find((item) => item.id === currentUser.uid);
 
     return (
         <div className="Dash_content_two">
@@ -88,7 +91,7 @@ const DashContentTwo = () => {
             </div>
             <div className="dash_box_content admin">
                 <div className="profil_admin_dash">
-                    <img src={logo} alt="" />
+                    <img src={admin?.photoUrl} alt="" />
                     <h2>Roldi MAMPASSI</h2>
                     <span>Administrateur</span>
                     <button onClick={() => navigate("/parametres")}>

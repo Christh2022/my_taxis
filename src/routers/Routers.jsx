@@ -11,6 +11,7 @@ import SignUp from "../Pages/SignUp";
 import PrivateRouter from "./PrivateRouter";
 import TaxisDetail from "../Pages/TaxisDetail";
 import AddTaxis from "../Pages/AddTaxis";
+import Clients from "../Pages/Clients";
 
 const Routers = ({ hide, show }) => {
     return (
@@ -25,6 +26,10 @@ const Routers = ({ hide, show }) => {
                     <Route
                         path="chauffeur"
                         element={<DriverPage hide={hide} show={show}  />}
+                    />
+                    <Route
+                        path="clients"
+                        element={<Clients hide={hide} show={show}  />}
                     />
                     <Route
                         path="parametres"

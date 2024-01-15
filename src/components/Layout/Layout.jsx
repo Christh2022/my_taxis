@@ -9,12 +9,12 @@ const Layout = () => {
     const { hide, setHide } = UseVariables();
     const location = useLocation();
     const { currentUser } = UserAuth();
-    const [show, setShow] = useState(false)
+    const [show, setShow] = useState(false);
 
     useEffect(() => {
         if (Object.keys(currentUser || {}).length === 0) {
             setShow(false);
-        } else setShow(true)
+        } else setShow(true);
     }, [currentUser]);
 
     const HideMenu = () => {
@@ -23,12 +23,15 @@ const Layout = () => {
 
     return (
         <div>
-            {location.pathname.startsWith("/login") ? (
+            {location.pathname.startsWith("/login") ||
+            location.pathname.startsWith("/signup") ? (
                 <></>
             ) : (
-                show && (<NavBar hide={hide} setHide={setHide} HideMenu={HideMenu} />) 
+                show && (
+                    <NavBar hide={hide} setHide={setHide} HideMenu={HideMenu} />
+                )
             )}
-            <Routers hide={hide} setHide={setHide} show={show}/>
+            <Routers hide={hide} setHide={setHide} show={show} />
         </div>
     );
 };

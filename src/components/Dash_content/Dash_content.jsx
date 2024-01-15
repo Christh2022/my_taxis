@@ -11,6 +11,8 @@ const DashContent = () => {
     const { depense, recette, recetteDay, depenseGreen, benefice, conducteur } =
         UseVariables();
 
+        
+
     return (
         <div className="card_dash_stat">
             <div className="card_dash_stat_left">

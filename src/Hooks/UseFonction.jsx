@@ -91,18 +91,18 @@ const UseFonction = () => {
         carTab?.forEach((item) => {
             let a =
                 item.recette
-                    .filter((item) => item.date.month === date.getMonth() + 1)
-                    .reduce((acc, val) => acc + val.montant, 0) -
+                    ?.filter((item) => item.date.month === date.getMonth() + 1)
+                    ?.reduce((acc, val) => acc + val.montant, 0) -
                 item.motifDepense
-                    .filter((item) => item.date.month === date.getMonth() + 1)
-                    .reduce((acc, val) => acc + Number(val.price), 0);
+                    ?.filter((item) => item.date.month === date.getMonth() + 1)
+                    ?.reduce((acc, val) => acc + Number(val.price), 0);
 
                     
-            if (item.type.toLowerCase() === "coaster")
+            if (item.type?.toLowerCase() === "coaster")
                 benefit.push(a / (50000 * DayNbrperMonth));
-            if (item.type.toLowerCase() === "bus")
+            if (item.type?.toLowerCase() === "bus")
                 benefit.push(a / (35000 * DayNbrperMonth));
-            if (item.type.toLowerCase() === "taxis")
+            if (item.type?.toLowerCase() === "taxis")
                 benefit.push(a / (15000 * DayNbrperMonth));
         });
 

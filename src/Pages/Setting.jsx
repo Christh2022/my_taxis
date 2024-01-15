@@ -47,7 +47,7 @@ const Setting = ({ hide, show }) => {
                         <h2>Paramettre</h2>
                         <div className="box_setting_info">
                             <div className="first_box_setting">
-                                <img src={profile} alt="" />
+                                <img src={admin?.photoUrl || profile} alt="" />
                                 <h6>
                                     {admin?.nom.split(" ")[0] +
                                         " " +
