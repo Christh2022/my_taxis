@@ -11,7 +11,7 @@ const Layout = () => {
     const location = useLocation();
     const { currentUser } = UserAuth();
     const [show, setShow] = useState(false);
-    const [showImage, setShowImage] = useState([false, []])
+    const [showImage, setShowImage] = useState([false, [], '', ''])
 
     useEffect(() => {
         if (Object.keys(currentUser || {}).length === 0) {

@@ -584,7 +584,11 @@ const UseFonction = () => {
                                                     await getDownloadURL(
                                                         uploadTask.snapshot.ref
                                                     );
-                                                carDoc.push(downloadURL);
+                                                    const obj = {
+                                                        url : downloadURL,
+                                                        date: new Date()
+                                                    }
+                                                carDoc.push({...obj});
                                                 resolve();
                                             }
                                         );
@@ -911,6 +915,7 @@ const UseFonction = () => {
         changeAssuranceDate,
         busOrCoasterOrTaxiEmployee,
         handleBenefPercentEmployee,
+        linkTab 
     };
 };
 

@@ -386,7 +386,7 @@ const TaxisDetail = ({ hide,  setShowImage }) => {
                                         item.Car_Document?.forEach((val)=>{
                                             tab.push(val)
                                         })
-                                        setShowImage([true, tab])
+                                        setShowImage([true, tab, 'des documents', id])
                                     }}
                                 >
                                     voir
@@ -408,7 +408,7 @@ const TaxisDetail = ({ hide,  setShowImage }) => {
                                         item.Car_Images?.forEach((val)=>{
                                             tab.push(val)
                                         })
-                                        setShowImage([true, tab])
+                                        setShowImage([true, tab, 'images voiture', id])
                                     }}
                                 >
                                     voir
