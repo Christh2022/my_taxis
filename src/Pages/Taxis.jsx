@@ -10,22 +10,22 @@ import UseVariables from "../Hooks/UseVariables";
 const Taxis = ({ hide }) => {
     const navigate = useNavigate();
     const { Search, Plus } = UseIcons();
-    const { carTab } = UseVariables();
+    const { tab } = UseVariables();
     const handleDetail = (id) => {
         navigate(`/taxis/${id}`);
     };
 
-    const handleAddTaxis = ()=>{
-        navigate('/taxis/ajout')
-    }
+    const handleAddTaxis = () => {
+        navigate("/taxis/ajout");
+    };
 
-    const seeImage = (a)=>{
-        if (a?.toLowerCase() === 'taxis'.toLowerCase()) {
-          return taxis
-        } else if(a?.toLowerCase() === 'bus'.toLowerCase()) {
-            return bus
-        } else if (a?.toLowerCase() === 'coaster'.toLowerCase()) return coaster
-    }
+    const seeImage = (a) => {
+        if (a?.toLowerCase() === "taxis".toLowerCase()) {
+            return taxis;
+        } else if (a?.toLowerCase() === "bus".toLowerCase()) {
+            return bus;
+        } else if (a?.toLowerCase() === "coaster".toLowerCase()) return coaster;
+    };
     return (
         <div className={`taxis_list_content ${hide && "taxis_isActive"}`}>
             <div className="container_taxis_list">
@@ -39,7 +39,10 @@ const Taxis = ({ hide }) => {
                                 </span>
                                 <input type="text" placeholder="Recherche..." />
                             </div>
-                            <button className="driver_add" onClick={handleAddTaxis}>
+                            <button
+                                className="driver_add"
+                                onClick={handleAddTaxis}
+                            >
                                 <span>Ajouter</span>
                                 <span>
                                     <Plus />
@@ -49,22 +52,29 @@ const Taxis = ({ hide }) => {
                     </div>
                 </div>
                 <ul id="taxisList" className="taxis_list">
-                    {carTab?.map((item) => <li key={item.numeroSerie}>
-                        <img src={seeImage(item.type)} alt="" />
-                        <h5>{item.modele}</h5>
-                        <div>
+                    {tab[0]?.info_entreprise.taxis?.map((item) => (
+                        <li key={item.numeroSerie}>
+                            <img src={seeImage(item.type)} alt="" />
+                            <h5>{item.modele}</h5>
                             <div>
-                                <span>Sieges : </span>
-                                <span>{item.places}</span>
+                                <div>
+                                    <span>Sieges : </span>
+                                    <span>{item.places}</span>
+                                </div>
+                                <div>
+                                    <span>Status : </span>
+                                    <span>{item.statut}</span>
+                                </div>
                             </div>
-                            <div>
-                                <span>Status : </span>
-                                <span>{item.statut}</span>
-                            </div>
-                        </div>
-                        <button onClick={() => handleDetail(`${item.numeroSerie}`)}>Détail</button>
-                    </li>)}
-                    
+                            <button
+                                onClick={() =>
+                                    handleDetail(`${item.numeroSerie}`)
+                                }
+                            >
+                                Détail
+                            </button>
+                        </li>
+                    ))}
                 </ul>
             </div>
         </div>

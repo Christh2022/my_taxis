@@ -4,6 +4,7 @@ import "./css/driverpage.css";
 import PropTypes from "prop-types";
 import UseFonction from "../Hooks/UseFonction";
 import UserAuth from "../Hooks/UserAuth";
+import { toast } from "react-toastify";
 
 const DriverPage = ({ hide, show }) => {
     const [add, setAdd] = useState(false);
@@ -18,27 +19,53 @@ const DriverPage = ({ hide, show }) => {
     const [date_de_prise_de_post, setDate_de_prise_de_post] = useState();
     const [statut, setStatus] = useState();
     const { currentUser } = UserAuth();
+    const [image, setImage] = useState();
     const handleAddDriver = () => {
         !add && setAdd(true);
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        addEmployee(
-            nom,
-            prenom,
-            age,
-            tel,
-            adresse,
-            nombre_d_enfant,
-            statut_marital,
-            date_de_prise_de_post,
-            statut,
-            currentUser.uid
-        );
 
-        setAdd(false)
+        if (
+            !nom &&
+            !prenom &&
+            !age &&
+            !tel &&
+            !adresse &&
+            !nombre_d_enfant &&
+            !statut_marital &&
+            !date_de_prise_de_post &&
+            !image
+        ) {
+            toast.warn(" aucun chauffeur n'a été ajouté ");
+            setAdd(false);
+        } else {
+            addEmployee(
+                nom,
+                prenom,
+                age,
+                tel,
+                adresse,
+                nombre_d_enfant,
+                statut_marital,
+                date_de_prise_de_post,
+                statut,
+                currentUser.uid,
+                image
+            );
+
+                nom &&
+                prenom &&
+                age &&
+                tel &&
+                adresse &&
+                nombre_d_enfant &&
+                statut_marital &&
+                date_de_prise_de_post &&
+                image &&
+                setAdd(false);
+        }
     };
-
 
     useEffect(() => {
         setTimeout(() => {
@@ -132,10 +159,34 @@ const DriverPage = ({ hide, show }) => {
                                 <div className="input_box_add">
                                     <input
                                         type="text"
-                                        placeholder="statut"
+                                        placeholder="statut : inactif"
                                         onChange={(e) =>
                                             setStatus(e.target.value)
                                         }
+                                        disabled
+                                    />
+                                </div>
+                                <div
+                                    className="input_box_add"
+                                    style={{
+                                        background: "#555",
+                                        maxWidth: "520px",
+                                        padding: ".2rem .0",
+                                        borderRadius: ".3rem",
+                                        height: "30px",
+                                    }}
+                                >
+                                    <input
+                                        type="file"
+                                        onChange={(e) =>
+                                            setImage(e.target.files[0])
+                                        }
+                                        multiple
+                                        style={{
+                                            height: "24px",
+                                            padding: "0 .3rem",
+                                        }}
+                                        accept="image/*"
                                     />
                                 </div>
                                 <button id="bottomOfPage">Ajouter </button>

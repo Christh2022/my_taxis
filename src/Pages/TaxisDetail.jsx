@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-// import UseIcons from "../Hooks/UseIcons";
 import "./css/taxisdetail.css";
 import UseVariables from "../Hooks/UseVariables";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,7 +8,7 @@ import UseIcons from "../Hooks/UseIcons";
 import UserAuth from "../Hooks/UserAuth";
 import { toast } from "react-toastify";
 
-const TaxisDetail = ({ hide }) => {
+const TaxisDetail = ({ hide,  setShowImage }) => {
     const [date, setDate] = useState();
     const [price, setPrice] = useState();
     const [motif, setMotif] = useState();
@@ -97,16 +96,18 @@ const TaxisDetail = ({ hide }) => {
         setChangeStatus(false);
 
         if (newSatus) {
-            changeStatut(id, newSatus, currentUser.uid)
-            toast.success("vous venez de modifier le statut du véhicule")
+            changeStatut(id, newSatus, currentUser.uid);
+            toast.success("vous venez de modifier le statut du véhicule");
         } else toast.warning("aucune modification n'a éffectué");
     };
 
     const handleChangeDate = () => {
         setChangeDate(false);
         if (newAs_Date) {
-            changeAssuranceDate(id, newAs_Date, currentUser.uid)
-            toast.success("vous venez de modifier la date de fin de validité de votre assurance")
+            changeAssuranceDate(id, newAs_Date, currentUser.uid);
+            toast.success(
+                "vous venez de modifier la date de fin de validité de votre assurance"
+            );
         } else toast.warning("aucune modification n'a éffectué");
     };
 
@@ -207,7 +208,10 @@ const TaxisDetail = ({ hide }) => {
                                                 }
                                             />
                                         ) : (
-                                            <button className="editebutton_taxis" onClick={handleChangeDate}>
+                                            <button
+                                                className="editebutton_taxis"
+                                                onClick={handleChangeDate}
+                                            >
                                                 Enregistrez
                                             </button>
                                         )}
@@ -283,7 +287,10 @@ const TaxisDetail = ({ hide }) => {
                                         {!change ? (
                                             <Pencil onClick={changeInfo} />
                                         ) : (
-                                            <button className="editebutton_taxis" onClick={handleSaveDriver}>
+                                            <button
+                                                className="editebutton_taxis"
+                                                onClick={handleSaveDriver}
+                                            >
                                                 Enregistrez
                                             </button>
                                         )}
@@ -354,13 +361,57 @@ const TaxisDetail = ({ hide }) => {
                                             />
                                         ) : (
                                             <button
-                                            className="editebutton_taxis"
+                                                className="editebutton_taxis"
                                                 onClick={handleChangeStatus}
                                             >
                                                 Enregistrez
                                             </button>
                                         )}
                                     </span>
+                                </span>
+                            </div>
+                            <div className="personol_item_info">
+                                <span>Document du véhicule : </span>
+                                <span
+                                    style={{
+                                        background: "#fad02c",
+                                        padding: ".05rem .5rem",
+                                        color: "#222",
+                                        fontWeight: "600",
+                                        cursor: "pointer",
+                                        borderRadius: ".3rem" 
+                                    }}
+                                    onClick={()=>{
+                                        const tab = []
+                                        item.Car_Document?.forEach((val)=>{
+                                            tab.push(val)
+                                        })
+                                        setShowImage([true, tab])
+                                    }}
+                                >
+                                    voir
+                                </span>
+                            </div>
+                            <div className="personol_item_info">
+                                <span>Images du véhicule : </span>
+                                <span
+                                    style={{
+                                        background: "#fad02c",
+                                        padding: ".05rem .5rem",
+                                        color: "#222",
+                                        fontWeight: "600",
+                                        cursor: "pointer",
+                                        borderRadius: ".3rem" 
+                                    }}
+                                    onClick={()=>{
+                                        const tab = []
+                                        item.Car_Images?.forEach((val)=>{
+                                            tab.push(val)
+                                        })
+                                        setShowImage([true, tab])
+                                    }}
+                                >
+                                    voir
                                 </span>
                             </div>
                         </div>
@@ -474,8 +525,11 @@ const TaxisDetail = ({ hide }) => {
     );
 };
 
+
+
 TaxisDetail.propTypes = {
     hide: PropTypes.bool,
+    setShowImage: PropTypes.func
 };
 
 export default TaxisDetail;

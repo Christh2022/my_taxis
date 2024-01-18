@@ -4,12 +4,14 @@ import NavBar from "../NavBar/NavBar";
 import UseVariables from "../../Hooks/UseVariables";
 import { useEffect, useState } from "react";
 import UserAuth from "../../Hooks/UserAuth";
+import PopUp from "../PopUp/PopUp";
 
 const Layout = () => {
     const { hide, setHide } = UseVariables();
     const location = useLocation();
     const { currentUser } = UserAuth();
     const [show, setShow] = useState(false);
+    const [showImage, setShowImage] = useState([false, []])
 
     useEffect(() => {
         if (Object.keys(currentUser || {}).length === 0) {
@@ -31,7 +33,8 @@ const Layout = () => {
                     <NavBar hide={hide} setHide={setHide} HideMenu={HideMenu} />
                 )
             )}
-            <Routers hide={hide} setHide={setHide} show={show} />
+            <Routers hide={hide} setHide={setHide} show={show} showImage = { showImage} setShowImage={setShowImage} />
+            {showImage[0] && <PopUp showImage = { showImage} setShowImage={setShowImage}/>}
         </div>
     );
 };

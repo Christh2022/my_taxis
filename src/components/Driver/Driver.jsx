@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./driver.css";
-import profil from "../../assets/profil.jpg";
 import { useNavigate } from "react-router-dom";
 import UseIcons from "../../Hooks/UseIcons";
 import PropTypes from "prop-types";
@@ -59,7 +58,7 @@ const Driver = ({ handleAddDriver }) => {
                         {tab[0]?.info_entreprise.chauffeur?.map((item) => (
                             <tr key={item.id}>
                                 <td>
-                                    <img src={profil} alt="" />
+                                    <img src={item?.photoUrl} alt="" />
                                     <span>{item.nom}</span>
                                 </td>
                                 {resize && <td>{item.tel}</td>}

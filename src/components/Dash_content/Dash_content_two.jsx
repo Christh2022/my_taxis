@@ -1,6 +1,5 @@
 import UseIcons from "../../Hooks/UseIcons";
 import "./dashcontenttwo.css";
-import logo from "../../assets/profil.jpg";
 import { useNavigate } from "react-router-dom";
 import UseVariables from "../../Hooks/UseVariables";
 import UseFonction from "../../Hooks/UseFonction";
@@ -72,7 +71,7 @@ const DashContentTwo = () => {
                     {drivertab?.map((item) => (
                         <li key={item.id} className="recette_info_driver">
                             <div className="profil_driver_dash">
-                                <img src={logo} alt="" />
+                                <img src={item?.photoUrl} alt="" />
                                 <div className="info_name">
                                     {item.nom.split(" ").map((value, index) => (
                                         <p key={index}>{value}</p>

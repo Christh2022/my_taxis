@@ -22,6 +22,8 @@ const AddTaxis = ({ hide }) => {
     const [assurance_date, setAssurance_date] = useState();
     const [chauffeur, setChauffeur] = useState();
     const [statut, setStatut] = useState();
+    const [images, setImages] = useState([]);
+    const [CarImages, setCarImages] = useState([]);
     const navigate = useNavigate();
     const { AddNewCar } = UseFonction();
     const { tab } = UseVariables();
@@ -31,7 +33,17 @@ const AddTaxis = ({ hide }) => {
         e.preventDefault();
 
         if (
-            marque 
+            marque &&
+            modele &&
+            type &&
+            CarImages &&
+            images &&
+            statut &&
+            chauffeur &&
+            prix_achat &&
+            date_inspection &&
+            achat_date &&
+            carburant 
         ) {
             AddNewCar(
                 marque,
@@ -49,7 +61,9 @@ const AddTaxis = ({ hide }) => {
                 assurance_date,
                 chauffeur,
                 statut,
-                currentUser.uid
+                currentUser.uid,
+                images,
+                CarImages
             );
             toast.success("vous venez de rajouter un  nouveau véhicule");
             navigate("/taxis");
@@ -57,15 +71,29 @@ const AddTaxis = ({ hide }) => {
     };
 
     useEffect(() => {
-        console.log(tab[0]?.info_entreprise.chauffeur);
+        // console.log(tab[0]?.info_entreprise.chauffeur);
     });
 
-    const senName = (nom , prenom) => {
-        const newNom = nom.split(' ')
-        const newPrenom = prenom.split(" ")
+    const handleChange1 = (e) => {
+        for (let i = 0; i < e.target.files.length; i++) {
+            const newImage = e.target.files[i];
+            newImage["id"] = Math.random();
+            setImages((prevState) => [...prevState, newImage]);
+        }
+    };
+    const handleChange2 = (e) => {
+        for (let i = 0; i < e.target.files.length; i++) {
+            const newImage = e.target.files[i];
+            newImage["id"] = Math.random();
+            setCarImages((prevState) => [...prevState, newImage]);
+        }
+    };
 
-        return newNom[0] + ' ' + newPrenom[0]
-    }
+    const senName = (nom, prenom) => {
+        const newNom = nom.split(" ");
+        const newPrenom = prenom.split(" ");
+        return newNom[0] + " " + newPrenom[0];
+    };
 
     return (
         <div
@@ -230,7 +258,9 @@ const AddTaxis = ({ hide }) => {
                             type="file"
                             id="photos_vehicule"
                             name="photos_vehicule"
-                            accept="image/*"
+                            accept="image/"
+                            multiple
+                            onChange={handleChange2}
                         />
                     </div>
                     <div className="input_gruop">
@@ -244,6 +274,7 @@ const AddTaxis = ({ hide }) => {
                             name="documents_scannes"
                             multiple
                             accept=".pdf, .doc, .docx, .jpg, .jpeg, .png"
+                            onChange={handleChange1}
                         />
                     </div>
                     <div className="input_gruop">
@@ -259,11 +290,13 @@ const AddTaxis = ({ hide }) => {
                             <option value="aucun chauffeur disponible">
                                 Aucun Chauffeur
                             </option>
-                            {tab[0]?.info_entreprise.chauffeur?.filter((value) => value.statut !== 'actif')?.map((item) => (
-                                <option value={item.id} key={item.id}>
-                                    {senName(item.nom , item.prenom)}
-                                </option>
-                            ))}
+                            {tab[0]?.info_entreprise.chauffeur
+                                ?.filter((value) => value.statut !== "actif")
+                                ?.map((item) => (
+                                    <option value={item.id} key={item.id}>
+                                        {senName(item.nom, item.prenom)}
+                                    </option>
+                                ))}
                         </select>
                     </div>
                     <div className="input_gruop">

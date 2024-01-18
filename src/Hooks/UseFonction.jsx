@@ -1,8 +1,9 @@
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
-import { firestore } from "../Firebase.config";
+import { firestore, storage } from "../Firebase.config";
 import { toast } from "react-toastify";
 import UseVariables from "./UseVariables";
 import { v4 } from "uuid";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 const UseFonction = () => {
     const driverId = v4();
@@ -97,7 +98,6 @@ const UseFonction = () => {
                     ?.filter((item) => item.date.month === date.getMonth() + 1)
                     ?.reduce((acc, val) => acc + Number(val.price), 0);
 
-                    
             if (item.type?.toLowerCase() === "coaster")
                 benefit.push(a / (50000 * DayNbrperMonth));
             if (item.type?.toLowerCase() === "bus")
@@ -225,7 +225,8 @@ const UseFonction = () => {
         statut_marital,
         date_de_prise_de_post,
         statut,
-        id
+        id,
+        image
     ) => {
         if (
             nom &&
@@ -236,7 +237,7 @@ const UseFonction = () => {
             nombre_d_enfant &&
             statut_marital &&
             date_de_prise_de_post &&
-            statut
+            image
         ) {
             const newEmploye = {
                 id: driverId,
@@ -248,9 +249,10 @@ const UseFonction = () => {
                 nombre_d_enfant,
                 statut_marital,
                 date_de_prise_de_post,
-                statut,
+                statut: "inactif",
                 depense: [],
                 recette: [],
+                photoUrl: image,
             };
 
             const documentSnapshot = await getDocs(
@@ -274,16 +276,107 @@ const UseFonction = () => {
                         data[0].info_entreprise.chauffeur.length ===
                         newDriver.length
                     ) {
-                        newDriver.push(newEmploye);
+                        const url = URL.createObjectURL(image);
+                        const img = new Image();
+                        img.src = url;
 
-                        updateDoc(doc(firestore, "utilisateur", id), {
-                            info_entreprise: {
-                                taxis: data[0].info_entreprise.taxis,
-                                chauffeur: newDriver,
-                            },
-                        });
+                        img.onload = function () {
+                            const canvas = document.createElement("canvas");
+                            const ctx = canvas.getContext("2d");
+                            canvas.width = img.naturalWidth;
+                            canvas.height = img.naturalHeight;
 
-                        toast.success("le chauffeur a été ajouté avec success");
+                            ctx.drawImage(img, 0, 0);
+
+                            canvas.toBlob(
+                                (blob) => {
+                                    const filereader = new FileReader();
+
+                                    filereader.readAsDataURL(blob);
+
+                                    filereader.addEventListener("load", () => {
+                                        const dataUrl = filereader.result;
+                                        const img2 = new Image();
+                                        img2.src = dataUrl;
+
+                                        const imageRef = ref(
+                                            storage,
+                                            `files/${v4()} `
+                                        );
+                                        const uploadTask = uploadBytesResumable(
+                                            imageRef,
+                                            blob
+                                        );
+                                        uploadTask.on(
+                                            "state_changed",
+                                            (snapshot) => {
+                                                const progress =
+                                                    (snapshot.bytesTransferred /
+                                                        snapshot.totalBytes) *
+                                                    100;
+                                                console.log(
+                                                    "Upload is " +
+                                                        progress +
+                                                        "% done"
+                                                );
+                                                switch (snapshot.state) {
+                                                    case "paused":
+                                                        console.log(
+                                                            "Upload is paused"
+                                                        );
+                                                        break;
+                                                    case "running":
+                                                        console.log(
+                                                            "Upload is running"
+                                                        );
+                                                        break;
+                                                    default:
+                                                }
+                                            },
+                                            (error) => {
+                                                toast.error(
+                                                    "une erreur s'est produite"
+                                                );
+                                                console.log(error);
+                                            },
+                                            () => {
+                                                getDownloadURL(
+                                                    uploadTask.snapshot.ref
+                                                ).then((downloadURL) => {
+                                                    console.log(downloadURL);
+                                                    newDriver.push({
+                                                        ...newEmploye,
+                                                        photoUrl: downloadURL,
+                                                    });
+                                                    updateDoc(
+                                                        doc(
+                                                            firestore,
+                                                            "utilisateur",
+                                                            id
+                                                        ),
+                                                        {
+                                                            info_entreprise: {
+                                                                taxis: data[0]
+                                                                    .info_entreprise
+                                                                    .taxis,
+                                                                chauffeur:
+                                                                    newDriver,
+                                                            },
+                                                        }
+                                                    );
+                                                    toast.success(
+                                                        "le chauffeur a été ajouté avec success"
+                                                    );
+                                                    console.log(newDriver);
+                                                });
+                                            }
+                                        );
+                                    });
+                                },
+                                "image/webp",
+                                0.1
+                            );
+                        };
                     }
                 } else {
                     toast.error("Le document spécifié n'existe pas.");
@@ -292,6 +385,23 @@ const UseFonction = () => {
                 toast.error("une erreur s'est produite.");
             }
         } else {
+            const newEmploye = {
+                id: driverId,
+                nom,
+                prenom,
+                adresse,
+                age,
+                tel,
+                nombre_d_enfant,
+                statut_marital,
+                date_de_prise_de_post,
+                statut,
+                depense: [],
+                recette: [],
+                photoUrl: image,
+            };
+            console.log(newEmploye);
+            toast.error("veuillez remplir tous les champs");
             console.log("error");
         }
     };
@@ -396,6 +506,108 @@ const UseFonction = () => {
         }
     };
 
+    //creer un tableau de lien
+    const linkTab = async (tab) => {
+        if (tab) {
+            const carDoc = [];
+
+            for (const image of tab) {
+                const url = URL.createObjectURL(image);
+                const img = new Image();
+
+                await new Promise((resolve) => {
+                    img.onload = function () {
+                        const canvas = document.createElement("canvas");
+                        const ctx = canvas.getContext("2d");
+                        canvas.width = img.naturalWidth;
+                        canvas.height = img.naturalHeight;
+
+                        ctx.drawImage(img, 0, 0);
+
+                        canvas.toBlob(
+                            async (blob) => {
+                                const filereader = new FileReader();
+
+                                filereader.readAsDataURL(blob);
+
+                                filereader.addEventListener(
+                                    "load",
+                                    async () => {
+                                        const dataUrl = filereader.result;
+                                        const img2 = new Image();
+                                        img2.src = dataUrl;
+
+                                        const imageRef = ref(
+                                            storage,
+                                            `files/${v4()} `
+                                        );
+                                        const uploadTask = uploadBytesResumable(
+                                            imageRef,
+                                            blob
+                                        );
+
+                                        uploadTask.on(
+                                            "state_changed",
+                                            (snapshot) => {
+                                                const progress =
+                                                    (snapshot.bytesTransferred /
+                                                        snapshot.totalBytes) *
+                                                    100;
+                                                console.log(
+                                                    "Upload is " +
+                                                        progress +
+                                                        "% done"
+                                                );
+                                                switch (snapshot.state) {
+                                                    case "paused":
+                                                        console.log(
+                                                            "Upload is paused"
+                                                        );
+                                                        break;
+                                                    case "running":
+                                                        console.log(
+                                                            "Upload is running"
+                                                        );
+                                                        break;
+                                                    default:
+                                                }
+                                            },
+                                            (error) => {
+                                                toast.error(
+                                                    "une erreur s'est produite"
+                                                );
+                                                console.log(error);
+                                                resolve();
+                                            },
+                                            async () => {
+                                                const downloadURL =
+                                                    await getDownloadURL(
+                                                        uploadTask.snapshot.ref
+                                                    );
+                                                carDoc.push(downloadURL);
+                                                resolve();
+                                            }
+                                        );
+                                    }
+                                );
+                            },
+                            "image/webp",
+                            0.1
+                        );
+                    };
+
+                    img.src = url;
+                });
+            }
+
+            console.log(carDoc);
+            return carDoc;
+        } else {
+            console.log("erreur");
+            return [];
+        }
+    };
+
     //ajouter une nouvelle voiture
     const AddNewCar = async (
         marque,
@@ -413,7 +625,9 @@ const UseFonction = () => {
         assurance_date,
         chauffeur,
         statut,
-        id
+        id,
+        images,
+        CarImages
     ) => {
         const documentSnapshot = await getDocs(
             collection(firestore, "utilisateur")
@@ -449,6 +663,8 @@ const UseFonction = () => {
                 statut,
                 motifDepense: [],
                 recette: [],
+                Car_Document: await linkTab(images),
+                Car_Images: await linkTab(CarImages),
             });
 
             const newTab = [];

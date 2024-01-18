@@ -13,7 +13,8 @@ import TaxisDetail from "../Pages/TaxisDetail";
 import AddTaxis from "../Pages/AddTaxis";
 import Clients from "../Pages/Clients";
 
-const Routers = ({ hide, show }) => {
+const Routers = ({ hide, show, showImage, setShowImage }) => {
+    
     return (
         <>
             <Routes>
@@ -38,7 +39,7 @@ const Routers = ({ hide, show }) => {
                     <Route path="taxis" element={<Taxis hide={hide}  show={show} />} />
                     <Route
                         path="taxis/:id"
-                        element={<TaxisDetail hide={hide}  />}
+                        element={<TaxisDetail hide={hide} showImage={showImage} setShowImage={setShowImage} />}
                     />
                     <Route
                         path="taxis/ajout"
@@ -62,6 +63,8 @@ const Routers = ({ hide, show }) => {
 Routers.propTypes = {
     hide: PropTypes.bool,
     show: PropTypes.bool,
+    showImage: PropTypes.array,
+    setShowImage: PropTypes.func
 };
 
 export default Routers;
